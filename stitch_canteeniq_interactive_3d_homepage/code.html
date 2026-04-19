@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CanteenIQ | The Kinetic Hearth</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Manrope:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-highest": "#262626",
+                        "primary-container": "#fe9400",
+                        "surface-container": "#1a1a1a",
+                        "inverse-primary": "#8d5000",
+                        "background": "#0e0e0e",
+                        "secondary-fixed": "#fecb00",
+                        "secondary-fixed-dim": "#eebe00",
+                        "surface-bright": "#2c2c2c",
+                        "on-error-container": "#ffd2c8",
+                        "on-error": "#450900",
+                        "secondary": "#fecb00",
+                        "surface-dim": "#0e0e0e",
+                        "secondary-container": "#745b00",
+                        "on-tertiary": "#005762",
+                        "on-primary": "#562f00",
+                        "tertiary-container": "#00e3fd",
+                        "outline-variant": "#484847",
+                        "surface-container-lowest": "#000000",
+                        "on-secondary": "#584500",
+                        "on-tertiary-container": "#004d57",
+                        "on-secondary-fixed-variant": "#634e00",
+                        "secondary-dim": "#eebe00",
+                        "on-primary-container": "#482600",
+                        "surface-container-high": "#20201f",
+                        "tertiary-dim": "#00d4ec",
+                        "primary-fixed": "#fe9400",
+                        "tertiary-fixed": "#00e3fd",
+                        "on-secondary-container": "#fff7ea",
+                        "on-background": "#ffffff",
+                        "surface-container-low": "#131313",
+                        "error-container": "#b92902",
+                        "surface-variant": "#262626",
+                        "primary-dim": "#ea8900",
+                        "on-surface": "#ffffff",
+                        "inverse-surface": "#fcf9f8",
+                        "error-dim": "#d53d18",
+                        "on-surface-variant": "#adaaaa",
+                        "error": "#ff7351",
+                        "outline": "#767575",
+                        "on-tertiary-fixed-variant": "#005762",
+                        "surface-tint": "#ffa84f",
+                        "on-primary-fixed-variant": "#542e00",
+                        "on-primary-fixed": "#231000",
+                        "inverse-on-surface": "#565555",
+                        "primary": "#ffa84f",
+                        "tertiary-fixed-dim": "#00d4ec",
+                        "surface": "#0e0e0e",
+                        "on-tertiary-fixed": "#003840",
+                        "tertiary": "#81ecff",
+                        "on-secondary-fixed": "#413200",
+                        "primary-fixed-dim": "#ea8900"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Manrope"],
+                        "label": ["Plus Jakarta Sans"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(38, 38, 38, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .tonal-shift-vignette {
+            background: radial-gradient(circle at center, rgba(32, 32, 31, 0) 0%, rgba(0, 0, 0, 0.8) 100%);
+        }
+        .kinetic-gradient {
+            background: linear-gradient(135deg, #ffa84f 0%, #fe9400 100%);
+        }
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: 'Manrope', sans-serif;
+            overflow-x: hidden;
+        }
+        h1, h2, h3 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        /* ===== LOADING BAR ===== */
+        #loading-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 2px;
+            width: 0%;
+            background: linear-gradient(90deg, #ffa84f, #fe9400);
+            z-index: 9999;
+            transition: width 0.15s ease-out, opacity 0.4s ease;
+        }
+
+        /* ===== SCROLL PROGRESS BAR ===== */
+        #scroll-progress-bar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 2px;
+            height: 0%;
+            background: #ffa84f;
+            z-index: 60;
+            transition: opacity 0.3s ease;
+        }
+
+        /* ===== HERO CANVAS ===== */
+        #hero-canvas {
+            width: 100vw;
+            height: 100vh;
+            display: block;
+            object-fit: cover;
+            will-change: transform;
+            transform: translateZ(0);
+        }
+
+        /* ===== STEAM PARTICLES ===== */
+        @keyframes steamRise {
+            0% {
+                transform: translateY(0) translateX(0) scale(1);
+                opacity: 0;
+            }
+            15% {
+                opacity: var(--particle-opacity);
+            }
+            85% {
+                opacity: var(--particle-opacity);
+            }
+            100% {
+                transform: translateY(-100vh) translateX(calc(var(--drift-x) * 1px)) scale(0.4);
+                opacity: 0;
+            }
+        }
+
+        .steam-particle {
+            position: absolute;
+            bottom: 0;
+            width: var(--particle-size);
+            height: var(--particle-size);
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: steamRise var(--particle-duration) var(--particle-delay) infinite ease-out;
+            z-index: 5;
+        }
+
+        /* ===== TEXT OVERLAYS ===== */
+        .story-beat {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            z-index: 10;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .story-beat .beat-content {
+            padding-left: clamp(2rem, 8vw, 8rem);
+            max-width: 600px;
+        }
+
+        .beat-label {
+            font-family: 'Manrope', sans-serif;
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #ffa84f;
+            opacity: 0.8;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .beat-headline {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 800;
+            color: white;
+            font-size: clamp(3rem, 7vw, 6rem);
+            line-height: 0.92;
+            letter-spacing: -0.03em;
+            margin-bottom: 1rem;
+        }
+
+        .beat-subcopy {
+            font-family: 'Manrope', sans-serif;
+            color: rgba(255,255,255,0.5);
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .gradient-text-clip {
+            background: linear-gradient(135deg, #ffa84f, #fe9400);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ===== SCROLL INVITATION ===== */
+        @keyframes chevronBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(6px); }
+        }
+
+        #scroll-invite {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 15;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            transition: opacity 0.4s ease;
+        }
+
+        #scroll-invite .scroll-text {
+            font-family: 'Manrope', sans-serif;
+            font-size: 11px;
+            letter-spacing: 0.25em;
+            color: white;
+            opacity: 0.25;
+        }
+
+        #scroll-invite .scroll-chevron {
+            animation: chevronBounce 1.5s infinite ease-in-out;
+            color: white;
+            opacity: 0.25;
+            font-size: 18px;
+        }
+
+        /* ===== CONTINUE ARROW (after beat 4) ===== */
+        @keyframes arrowPulse {
+            0%, 100% { transform: translateY(0); opacity: 0.4; }
+            50% { transform: translateY(8px); opacity: 0.2; }
+        }
+
+        #continue-arrow {
+            position: absolute;
+            bottom: 2.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 15;
+            color: white;
+            opacity: 0;
+            animation: arrowPulse 2s infinite ease-in-out;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        /* ===== BEAT 4 STAGGER ===== */
+        .stagger-item {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.6s cubic-bezier(0.16,1,0.3,1), transform 0.6s cubic-bezier(0.16,1,0.3,1);
+        }
+        .stagger-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== BEAT 2/3 DIRECTIONAL ===== */
+        .slide-from-left {
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        .slide-from-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* ===== BEAT 4 BUTTONS ===== */
+        .hero-btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #ffa84f, #fe9400);
+            color: #562f00;
+            padding: 0.875rem 2.5rem;
+            border-radius: 9999px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            pointer-events: auto;
+            transition: box-shadow 0.3s ease, transform 0.2s ease;
+        }
+        .hero-btn-primary:hover {
+            box-shadow: 0 0 40px rgba(255,168,79,0.25);
+            transform: scale(1.03);
+        }
+
+        .hero-btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(38, 38, 38, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: white;
+            padding: 0.875rem 2.5rem;
+            border-radius: 0.75rem;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            border: 1px solid rgba(72,72,71,0.15);
+            cursor: pointer;
+            pointer-events: auto;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+        .hero-btn-secondary:hover {
+            background: rgba(44, 44, 44, 0.8);
+            transform: scale(1.03);
+        }
+
+        /* ===== KINETIC FLOW SCROLL ANIMATIONS ===== */
+        .kinetic-wrapper {
+            background-color: #0e0e0e;
+            position: relative;
+        }
+
+        .kinetic-step {
+            transition: opacity 0.6s ease, filter 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .kinetic-step.ghosted {
+            opacity: 0.15;
+            filter: blur(1px);
+        }
+
+        .kinetic-step.ghosted .step-circle {
+            border-color: rgba(72, 72, 71, 0.1);
+            box-shadow: none;
+        }
+
+        .kinetic-step.ghosted .material-symbols-outlined {
+            color: #adaaaa !important;
+        }
+
+        .kinetic-step.active {
+            opacity: 1;
+            filter: blur(0);
+            transform: scale(1);
+        }
+
+        .kinetic-step.active .step-circle {
+            box-shadow: 0 0 40px rgba(255, 168, 79, 0.15);
+        }
+
+        .kinetic-step.completed {
+            opacity: 0.7;
+            filter: blur(0);
+        }
+
+        .kinetic-step.completed .step-circle {
+            box-shadow: 0 0 20px rgba(255, 168, 79, 0.06);
+        }
+
+        /* Pulse Ring One-shot */
+        @keyframes ringPulse {
+            0% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(2.2); opacity: 0; }
+        }
+
+        .pulse-ring {
+            position: absolute;
+            inset: 0;
+            border: 2px solid #ffa84f;
+            border-radius: 9999px;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        .pulse-once .pulse-ring {
+            animation: ringPulse 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Connector Line Animation */
+        .connector-line-container {
+            position: absolute;
+            height: 2px;
+            background: rgba(72, 72, 71, 0.12);
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .connector-line-fill {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, #ffa84f, #fe9400);
+            transform-origin: left;
+            transform: scaleX(0);
+            transition: transform 0.8s ease-out;
+        }
+
+        /* Shimmer Pulse */
+        @keyframes shimmerTravel {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .shimmer-once::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 168, 79, 0.6), transparent);
+            animation: shimmerTravel 0.6s ease-in-out forwards;
+        }
+
+        /* Heading Reveal */
+        .reveal-heading {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal-heading.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .editorial-underline {
+            height: 2px;
+            background: #ffa84f;
+            width: 0;
+            margin: 0.75rem auto 0;
+            transition: width 0.5s ease-out 0.3s;
+        }
+
+        .revealed .editorial-underline {
+            width: 60px;
+        }
+
+        @media (max-width: 768px) {
+            .connector-line-container {
+                width: 2px !important;
+                height: 4rem !important;
+                left: 50% !important;
+                transform: translateX(-50%) !important;
+            }
+            .connector-line-fill {
+                transform-origin: top;
+                transform: scaleY(0);
+            }
+            .shimmer-once::after {
+                background: linear-gradient(180deg, transparent, rgba(255, 168, 79, 0.6), transparent);
+                animation: shimmerTravelVertical 0.6s ease-in-out forwards;
+            }
+            @keyframes shimmerTravelVertical {
+                0% { transform: translateY(-100%); }
+                100% { transform: translateY(100%); }
+            }
+        }
+    </style>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700;1,800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&amp;display=swap" rel="stylesheet"/></head>
+<body class="selection:bg-primary selection:text-on-primary">
+
+<!-- Loading Bar -->
+<div id="loading-bar"></div>
+
+<!-- Scroll Progress Bar -->
+<div id="scroll-progress-bar"></div>
+
+<!-- TopAppBar -->
+<nav class="fixed top-0 w-full z-50 bg-neutral-900/60 backdrop-blur-xl flex justify-between items-center px-8 py-4 max-w-full shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-orange-500" data-icon="restaurant_menu">restaurant_menu</span>
+<span class="text-2xl font-extrabold tracking-tighter text-white uppercase font-['Plus_Jakarta_Sans']">CanteenIQ</span>
+</div>
+<div class="hidden md:flex items-center gap-10">
+<a class="text-orange-400 font-bold font-['Plus_Jakarta_Sans'] tracking-tight hover:text-orange-300 transition-colors duration-300" href="#">Home</a>
+<a class="text-neutral-400 font-['Plus_Jakarta_Sans'] tracking-tight hover:text-orange-300 transition-colors duration-300" href="#">Menu</a>
+<a class="text-neutral-400 font-['Plus_Jakarta_Sans'] tracking-tight hover:text-orange-300 transition-colors duration-300" href="#">Nutrition</a>
+<a class="text-neutral-400 font-['Plus_Jakarta_Sans'] tracking-tight hover:text-orange-300 transition-colors duration-300" href="#">Sustainability</a>
+</div>
+<button class="kinetic-gradient text-on-primary px-8 py-2.5 rounded-full font-bold tracking-tight scale-95 active:scale-90 transition-all duration-200 ease-in-out shadow-lg shadow-primary/20">Login Now</button>
+</nav>
+
+<main>
+<!-- ==================== CINEMATIC SCROLL HERO ==================== -->
+<section id="scroll-hero-wrapper" style="height: 600vh; position: relative; background: #000000;">
+    <div id="sticky-container" style="position: sticky; top: 0; height: 100vh; width: 100%; background: #000000; overflow: hidden;">
+
+        <!-- Canvas for frame rendering -->
+        <canvas id="hero-canvas"></canvas>
+
+        <!-- Steam Particles (30 CSS-only particles) -->
+        <div id="particles-container" style="position: absolute; inset: 0; pointer-events: none; z-index: 5; overflow: hidden;"></div>
+
+        <!-- Scroll Invitation -->
+        <div id="scroll-invite">
+            <span class="scroll-text">SCROLL</span>
+            <span class="scroll-chevron material-symbols-outlined">expand_more</span>
+        </div>
+
+        <!-- BEAT 2: Frames 21-80 (scroll 10-40%) -->
+        <div id="beat-2" class="story-beat">
+            <div class="beat-content">
+                <span class="beat-label slide-from-left">THE KINETIC HEARTH</span>
+                <h1 class="beat-headline slide-from-left">Something's<br/>rising.</h1>
+                <p class="beat-subcopy slide-from-left">Watch the craft unfold.</p>
+            </div>
+        </div>
+
+        <!-- BEAT 3: Frames 81-140 (scroll 40-70%) -->
+        <div id="beat-3" class="story-beat">
+            <div class="beat-content">
+                <span class="beat-label slide-from-left">CRAFTED FRESH</span>
+                <h1 class="beat-headline slide-from-left">Skip the<br/>Line.</h1>
+                <p class="beat-subcopy slide-from-left" style="max-width: 380px;">Order before you arrive. Your meal is ready when you walk in.</p>
+            </div>
+        </div>
+
+        <!-- BEAT 4: Frames 141-240 (scroll 70-100%) — Grand Reveal -->
+        <div id="beat-4" class="story-beat">
+            <div class="beat-content">
+                <span class="beat-label stagger-item" data-delay="0">FUTURE OF DINING</span>
+                <h1 class="beat-headline stagger-item" data-delay="150" style="margin-bottom: 0.25rem;">Skip the Line.</h1>
+                <h1 class="stagger-item" data-delay="300" style="font-family: 'Playfair Display', serif; font-style: italic; font-weight: 800; font-size: clamp(3rem, 7vw, 6rem); line-height: 0.92; letter-spacing: -0.03em; margin-bottom: 1.5rem;"><span class="gradient-text-clip">Eat Smart.</span></h1>
+                <p class="stagger-item" data-delay="450" style="font-family: 'Manrope', sans-serif; color: #adaaaa; max-width: 380px; line-height: 1.7; font-size: 15px; margin-bottom: 2rem;">Order your food online and avoid long canteen queues. Experience high-precision nutrition tailored for your kinetic lifestyle.</p>
+                <div class="stagger-item" data-delay="600" style="display: flex; flex-wrap: wrap; gap: 1rem;">
+                    <button class="hero-btn-primary">Login Now</button>
+                    <button class="hero-btn-secondary">Explore Menu</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Continue Arrow (visible after beat 4) -->
+        <div id="continue-arrow">
+            <span class="material-symbols-outlined" style="font-size: 28px;">expand_more</span>
+        </div>
+
+    </div>
+</section>
+
+<!-- Highlight Strip -->
+<section class="px-8 py-20 bg-surface">
+<div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="glass-panel p-8 rounded-xl flex flex-col gap-4 border border-outline-variant/5 hover:bg-surface-container-high transition-colors group">
+<span class="material-symbols-outlined text-4xl text-primary" data-icon="bolt">bolt</span>
+<h3 class="text-xl font-bold">Fast Ordering</h3>
+<p class="text-on-surface-variant">Tap, select, and pay in under 30 seconds. Designed for speed.</p>
+</div>
+<div class="glass-panel p-8 rounded-xl flex flex-col gap-4 border border-outline-variant/5 hover:bg-surface-container-high transition-colors group">
+<span class="material-symbols-outlined text-4xl text-secondary" data-icon="location_on">location_on</span>
+<h3 class="text-xl font-bold">Live Tracking</h3>
+<p class="text-on-surface-variant">Watch your meal prep in real-time. Know exactly when to walk over.</p>
+</div>
+<div class="glass-panel p-8 rounded-xl flex flex-col gap-4 border border-outline-variant/5 hover:bg-surface-container-high transition-colors group">
+<span class="material-symbols-outlined text-4xl text-tertiary" data-icon="timer_off">timer_off</span>
+<h3 class="text-xl font-bold">No Waiting</h3>
+<p class="text-on-surface-variant">Your food is ready when you arrive. Walk in, grab, and go.</p>
+</div>
+</div>
+</section>
+<!-- ==================== THE KINETIC FLOW (SCROLL-DRIVEN) ==================== -->
+<section id="kinetic-flow-wrapper" class="kinetic-wrapper" style="height: 250vh;">
+    <div id="kinetic-flow-sticky" class="sticky top-0 h-screen flex flex-col justify-center items-center overflow-hidden px-8">
+        
+        <!-- Section Heading (Reveals on entry) -->
+        <div id="kinetic-heading-container" class="max-w-5xl mx-auto text-center mb-20 reveal-heading">
+            <h2 class="text-5xl font-extrabold tracking-tight mb-4">The Kinetic Flow</h2>
+            <p class="text-on-surface-variant max-w-xl mx-auto">Our seamless digital-to-physical handoff ensures your food is fresh and your time is yours.</p>
+            <div class="editorial-underline"></div>
+        </div>
+
+        <div class="relative max-w-7xl mx-auto w-full flex flex-col md:flex-row justify-between items-center gap-16 md:gap-0">
+            
+            <!-- Timeline Connectors (Desktop) -->
+            <!-- Connector 1-2 -->
+            <div id="connector-1-2" class="connector-line-container hidden md:block" style="top: 3rem; left: 15%; width: 20%;">
+                <div class="connector-line-fill"></div>
+            </div>
+            <!-- Connector 2-3 -->
+            <div id="connector-2-3" class="connector-line-container hidden md:block" style="top: 3rem; left: 65%; width: 20%;">
+                <div class="connector-line-fill"></div>
+            </div>
+
+            <!-- Step 1 -->
+            <div id="step-1" class="kinetic-step relative z-10 flex flex-col items-center gap-6 ghosted">
+                <div class="step-circle w-24 h-24 rounded-full glass-panel border border-primary/30 flex items-center justify-center relative transition-all duration-500">
+                    <div class="pulse-ring"></div>
+                    <span class="material-symbols-outlined text-4xl text-primary" data-icon="smartphone" style="will-change: transform;">smartphone</span>
+                </div>
+                <div class="text-center step-text" style="opacity: 0; transform: translateY(16px); transition: all 0.5s ease-out;">
+                    <h4 class="font-bold text-xl mb-1">Order</h4>
+                    <p class="text-sm text-on-surface-variant">Pick from the menu</p>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div id="step-2" class="kinetic-step relative z-10 flex flex-col items-center gap-6 ghosted">
+                <div class="step-circle w-24 h-24 rounded-full glass-panel border border-secondary/30 flex items-center justify-center relative transition-all duration-500">
+                    <div class="pulse-ring"></div>
+                    <span class="material-symbols-outlined text-4xl text-secondary" data-icon="confirmation_number" style="will-change: transform;">confirmation_number</span>
+                </div>
+                <div class="text-center step-text" style="opacity: 0; transform: translateY(16px); transition: all 0.5s ease-out;">
+                    <h4 class="font-bold text-xl mb-1">Get Token</h4>
+                    <p class="text-sm text-on-surface-variant">Live digital receipt</p>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div id="step-3" class="kinetic-step relative z-10 flex flex-col items-center gap-6 ghosted">
+                <div class="step-circle w-24 h-24 rounded-full glass-panel border border-tertiary/30 flex items-center justify-center relative transition-all duration-500">
+                    <div class="pulse-ring"></div>
+                    <span class="material-symbols-outlined text-4xl text-tertiary" data-icon="lunch_dining" style="will-change: transform;">lunch_dining</span>
+                </div>
+                <div class="text-center step-text" style="opacity: 0; transform: translateY(16px); transition: all 0.5s ease-out;">
+                    <h4 class="font-bold text-xl mb-1">Pick Up</h4>
+                    <p class="text-sm text-on-surface-variant">Ready at the counter</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+<!-- Meet the Developers -->
+<section class="px-8 py-32 bg-surface-container-lowest">
+<div class="max-w-7xl mx-auto">
+<div class="flex justify-between items-end mb-16">
+<div>
+<span class="text-primary font-bold uppercase tracking-widest text-sm mb-2 block">The Minds Behind</span>
+<h2 class="text-5xl font-extrabold tracking-tight text-white">Meet the Developers</h2>
+</div>
+<button class="text-primary font-bold label-md tracking-widest uppercase hover:opacity-80 transition-opacity flex items-center gap-2">
+                        Our Vision <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+<!-- Developer Card 1 -->
+<div class="group relative bg-surface rounded-xl overflow-hidden shadow-2xl border border-outline-variant/5 transition-all duration-500 hover:shadow-primary/10 hover:-translate-y-2">
+<div class="h-80 overflow-hidden">
+<img alt="Lead Designer" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDW0ATxShuD63MqouGqZJIf4B4vbwKseAoTRpbkViGcNYWT0-asAxvKL-9Z9d_RJ25EqKcuMgPjDbn1hoZYcU75-twRH05O3wWjhA147cWyLnyqUEa11mmpgqw0zX28anyS6VWrYnhg1yVCsUXtLuwE6-e7TwGEvNdJa518TaPD9IVlKbieeL0zM9gTQjcYthn2QkSYnP23ZJBCJb2U06GNQ58MYfE6hJa68xR-1UT1KwFZ_MGw_0yyQMqnTESH2URK1m3w8052YA"/>
+</div>
+<div class="p-8 relative">
+<div class="flex justify-between items-start mb-2">
+<h4 class="text-2xl font-bold">Marcus Chen</h4>
+<span class="text-primary font-bold text-xs uppercase tracking-widest">Lead</span>
+</div>
+<p class="text-secondary font-bold text-sm mb-4">Lead Designer</p>
+<p class="text-on-surface-variant mb-8 text-sm leading-relaxed">Crafting the visual soul and kinetic energy of the CanteenIQ experience.</p>
+<div class="flex items-center justify-between">
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer text-xl" data-icon="share">share</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer text-xl" data-icon="public">public</span>
+</div>
+<button class="w-10 h-10 rounded-full glass-panel flex items-center justify-center text-primary border border-primary/20 hover:kinetic-gradient hover:text-on-primary transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="link">link</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Developer Card 2 -->
+<div class="group relative bg-surface rounded-xl overflow-hidden shadow-2xl border border-outline-variant/5 transition-all duration-500 hover:shadow-primary/10 hover:-translate-y-2">
+<div class="h-80 overflow-hidden">
+<img alt="Frontend Developer" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRCIULAxWhBlspM-Df0C2seH_3bJKvcMjTvcJ5goEODWMBJbU8YdO6PDRaU50gLiLZuoHEMj3hi9iQq_vtsldFX_zOI2YfnMALd3QjoeOPCafmR0p72xHTKkVCBNJVqhxDByi6D3sruU4DRxeXvIW63hbP8c1Dn0bb6CBNTaH0cIruGj3lIdyK2ZyW3hpPt0AF_JwSp_yXH0WWuXc9UI8_qQEcZf8VqxkzxW3CWvHiAfib2Oo0I_aEz-qAQFkEIsX32nqY_GPMxA"/>
+</div>
+<div class="p-8 relative">
+<div class="flex justify-between items-start mb-2">
+<h4 class="text-2xl font-bold">Elena Rodriguez</h4>
+<span class="text-secondary font-bold text-xs uppercase tracking-widest">Senior</span>
+</div>
+<p class="text-secondary font-bold text-sm mb-4">Frontend Architect</p>
+<p class="text-on-surface-variant mb-8 text-sm leading-relaxed">Translating complex nutritional data into seamless, high-performance interfaces.</p>
+<div class="flex items-center justify-between">
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer text-xl" data-icon="share">share</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer text-xl" data-icon="public">public</span>
+</div>
+<button class="w-10 h-10 rounded-full glass-panel flex items-center justify-center text-primary border border-primary/20 hover:kinetic-gradient hover:text-on-primary transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="link">link</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Developer Card 3 -->
+<div class="group relative bg-surface rounded-xl overflow-hidden shadow-2xl border border-outline-variant/5 transition-all duration-500 hover:shadow-primary/10 hover:-translate-y-2">
+<div class="h-80 overflow-hidden">
+<img alt="Backend Developer" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJfkU3CChQHrdlSKMIV_Xed7x4l8PMmO10fqc7WAFo9OOO6ERb-CJdSZS34FG0Qv--iL_7YmllVegmR0cVX4Tzd0qg9LzxO1UO5ALrAjmqNiRJJUML-Pbe2r3RnIa5YKrpj2nLKqWIK_n5y2_sbCVbpFWuxbs6XlU7g_OgOt09OCCYWzXwgJxdFTOpcbs6AwHUA7ON0DIPVLfOc5UC0eMJB_5DZIiZHf-gfiSdJ3-m79Ye3Y8_zz929MgnAkrrh2Z9Tua3ZLnOkw"/>
+</div>
+<div class="p-8 relative">
+<div class="flex justify-between items-start mb-2">
+<h4 class="text-2xl font-bold">Julian Vane</h4>
+<span class="text-tertiary font-bold text-xs uppercase tracking-widest">Logic</span>
+</div>
+<p class="text-secondary font-bold text-sm mb-4">Full Stack Developer</p>
+<p class="text-on-surface-variant mb-8 text-sm leading-relaxed">Building the robust infrastructure that powers real-time order synchronization.</p>
+<div class="flex items-center justify-between">
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer text-xl" data-icon="share">share</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer text-xl" data-icon="public">public</span>
+</div>
+<button class="w-10 h-10 rounded-full glass-panel flex items-center justify-center text-primary border border-primary/20 hover:kinetic-gradient hover:text-on-primary transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="link">link</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-black w-full py-12 px-8 border-t border-outline-variant/10">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex flex-col items-center md:items-start gap-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-orange-500" data-icon="restaurant_menu">restaurant_menu</span>
+<span class="text-lg font-bold text-neutral-200 font-['Plus_Jakarta_Sans']">CanteenIQ</span>
+</div>
+<p class="text-neutral-500 font-['Manrope'] text-sm tracking-wide">© 2024 CanteenIQ. The Kinetic Hearth.</p>
+</div>
+<div class="flex gap-10">
+<a class="text-neutral-500 font-['Manrope'] text-sm tracking-wide hover:text-orange-400 transition-all opacity-80 hover:opacity-100" href="#">Menu</a>
+<a class="text-neutral-500 font-['Manrope'] text-sm tracking-wide hover:text-orange-400 transition-all opacity-80 hover:opacity-100" href="#">Nutrition</a>
+<a class="text-neutral-500 font-['Manrope'] text-sm tracking-wide hover:text-orange-400 transition-all opacity-80 hover:opacity-100" href="#">Sustainability</a>
+<a class="text-neutral-500 font-['Manrope'] text-sm tracking-wide hover:text-orange-400 transition-all opacity-80 hover:opacity-100" href="#">Contact</a>
+</div>
+<div class="flex gap-6">
+<a class="w-10 h-10 rounded-full border border-outline-variant/20 flex items-center justify-center text-neutral-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="public">public</span>
+</a>
+<a class="w-10 h-10 rounded-full border border-outline-variant/20 flex items-center justify-center text-neutral-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="share">share</span>
+</a>
+<a class="w-10 h-10 rounded-full border border-outline-variant/20 flex items-center justify-center text-neutral-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="alternate_email">alternate_email</span>
+</a>
+</div>
+</div>
+</footer>
+
+<!-- ==================== JAVASCRIPT ==================== -->
+<script>
+(function() {
+    'use strict';
+
+    // ===== CONFIG =====
+    const TOTAL_FRAMES = 240;
+    const FRAME_PATH = '../noodles animation/ezgif-frame-';
+    const FRAME_EXT = '.jpg';
+
+    // ===== DOM REFS =====
+    const canvas = document.getElementById('hero-canvas');
+    const ctx = canvas.getContext('2d');
+    const wrapper = document.getElementById('scroll-hero-wrapper');
+    const loadingBar = document.getElementById('loading-bar');
+    const progressBar = document.getElementById('scroll-progress-bar');
+    const scrollInvite = document.getElementById('scroll-invite');
+    const continueArrow = document.getElementById('continue-arrow');
+    const beat2 = document.getElementById('beat-2');
+    const beat3 = document.getElementById('beat-3');
+    const beat4 = document.getElementById('beat-4');
+    const particlesContainer = document.getElementById('particles-container');
+
+    // ===== KINETIC FLOW REFS =====
+    const kineticWrapper = document.getElementById('kinetic-flow-wrapper');
+    const kineticHeading = document.getElementById('kinetic-heading-container');
+    const step1 = document.getElementById('step-1');
+    const step2 = document.getElementById('step-2');
+    const step3 = document.getElementById('step-3');
+    const connector12 = document.getElementById('connector-1-2');
+    const connector23 = document.getElementById('connector-2-3');
+
+    // ===== STATE =====
+    const frames = [];
+    let imagesLoaded = 0;
+    let allLoaded = false;
+    let currentFrame = 0;
+    let targetFrame = 0;
+    let lastDrawnFrame = -1;
+    let beat4Revealed = false;
+    let kineticHeadingRevealed = false;
+    let activeBeat = 0; // 0, 1, 2, 3
+
+    // ===== GENERATE PARTICLES (30 CSS-only steam particles) =====
+    function generateParticles() {
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'steam-particle';
+            const size = (Math.random() * 1 + 1).toFixed(1); // 1-2px
+            const opacity = (Math.random() * 0.10 + 0.08).toFixed(2); // 0.08-0.18
+            const duration = (Math.random() * 7 + 5).toFixed(1); // 5-12s
+            const delay = (Math.random() * 8).toFixed(1); // 0-8s
+            const left = (Math.random() * 100).toFixed(1); // 0-100%
+            const driftX = (Math.random() * 60 - 30).toFixed(0); // -30 to 30px drift
+
+            particle.style.setProperty('--particle-size', size + 'px');
+            particle.style.setProperty('--particle-opacity', opacity);
+            particle.style.setProperty('--particle-duration', duration + 's');
+            particle.style.setProperty('--particle-delay', delay + 's');
+            particle.style.setProperty('--drift-x', driftX);
+            particle.style.left = left + '%';
+
+            particlesContainer.appendChild(particle);
+        }
+    }
+    generateParticles();
+
+    // ===== CANVAS SIZING =====
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        if (frames[currentFrame] && frames[currentFrame].complete) {
+            drawFrame(currentFrame);
+        }
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // ===== FRAME PAD HELPER =====
+    function padNumber(num) {
+        return String(num).padStart(3, '0');
+    }
+
+    // ===== PRELOAD FRAMES =====
+    function preloadFrames() {
+        for (let i = 1; i <= TOTAL_FRAMES; i++) {
+            const img = new Image();
+            img.onload = function() {
+                imagesLoaded++;
+                const progress = (imagesLoaded / TOTAL_FRAMES) * 100;
+                loadingBar.style.width = progress + '%';
+
+                if (imagesLoaded === TOTAL_FRAMES) {
+                    allLoaded = true;
+                    // Hide loading bar
+                    loadingBar.style.opacity = '0';
+                    // Draw first frame
+                    drawFrame(0);
+                }
+            };
+            img.onerror = function() {
+                imagesLoaded++;
+                const progress = (imagesLoaded / TOTAL_FRAMES) * 100;
+                loadingBar.style.width = progress + '%';
+                if (imagesLoaded === TOTAL_FRAMES) {
+                    allLoaded = true;
+                    loadingBar.style.opacity = '0';
+                    drawFrame(0);
+                }
+            };
+            img.src = FRAME_PATH + padNumber(i) + FRAME_EXT;
+            frames.push(img);
+        }
+    }
+
+    // ===== DRAW FRAME =====
+    function drawFrame(index) {
+        if (index < 0 || index >= frames.length) return;
+        const img = frames[index];
+        if (!img || !img.complete || !img.naturalWidth) return;
+
+        const cw = canvas.width;
+        const ch = canvas.height;
+        const iw = img.naturalWidth;
+        const ih = img.naturalHeight;
+
+        // object-fit: cover with object-position: right center
+        const scale = Math.max(cw / iw, ch / ih);
+        const sw = iw * scale;
+        const sh = ih * scale;
+
+        // Anchor to right center
+        const dx = cw - sw; // push to right
+        const dy = (ch - sh) / 2;
+
+        ctx.clearRect(0, 0, cw, ch);
+        ctx.drawImage(img, dx, dy, sw, sh);
+
+        lastDrawnFrame = index;
+    }
+
+    // ===== SCROLL PROGRESS CALCULATION =====
+    function getScrollProgress() {
+        const sectionTop = wrapper.offsetTop;
+        const sectionHeight = wrapper.offsetHeight;
+        const windowHeight = window.innerHeight;
+
+        const scrolled = window.scrollY - sectionTop;
+        const total = sectionHeight - windowHeight;
+
+        return Math.max(0, Math.min(1, scrolled / total));
+    }
+
+    function getKineticProgress() {
+        const sectionTop = kineticWrapper.offsetTop;
+        const sectionHeight = kineticWrapper.offsetHeight;
+        const windowHeight = window.innerHeight;
+
+        const scrolled = window.scrollY - sectionTop;
+        const total = sectionHeight - windowHeight;
+
+        // Start revealing heading slightly before the section is actually in sticky view
+        const progress = scrolled / total;
+        return Math.max(0, Math.min(1, progress));
+    }
+
+    function updateStepUI(stepEl, state) {
+        // state: 'ghosted', 'active', 'completed'
+        stepEl.classList.remove('ghosted', 'active', 'completed');
+        stepEl.classList.add(state);
+
+        const text = stepEl.querySelector('.step-text');
+        if (state === 'ghosted') {
+            text.style.opacity = '0';
+            text.style.transform = 'translateY(16px)';
+        } else {
+            text.style.opacity = state === 'completed' ? '0.7' : '1';
+            text.style.transform = 'translateY(0)';
+        }
+    }
+
+    function triggerPulse(stepEl) {
+        if (!stepEl.classList.contains('pulse-once')) {
+            stepEl.classList.add('pulse-once');
+            // Remove after animation finishes so it can be re-triggered
+            setTimeout(() => stepEl.classList.remove('pulse-once'), 1000);
+        }
+    }
+
+    function triggerShimmer(connectorEl) {
+        const fill = connectorEl.querySelector('.connector-line-fill');
+        if (!fill.classList.contains('shimmer-once')) {
+            fill.classList.add('shimmer-once');
+            setTimeout(() => fill.classList.remove('shimmer-once'), 800);
+        }
+    }
+
+    function updateKineticFlow() {
+        const progress = getKineticProgress();
+        
+        // Heading reveal
+        if (progress > -0.1 && !kineticHeadingRevealed) {
+            kineticHeading.classList.add('revealed');
+            kineticHeadingRevealed = true;
+        }
+
+        let newBeat = 0;
+        if (progress > 0) newBeat = 1;
+        if (progress > 0.33) newBeat = 2;
+        if (progress > 0.66) newBeat = 3;
+
+        // Step 1
+        if (newBeat >= 1) {
+            updateStepUI(step1, newBeat === 1 ? 'active' : 'completed');
+            if (newBeat === 1 && activeBeat < 1) triggerPulse(step1);
+        } else {
+            updateStepUI(step1, 'ghosted');
+        }
+
+        // Connector 1-2 & Step 2
+        const fill12 = connector12.querySelector('.connector-line-fill');
+        if (progress > 0.25) {
+            // Local progress for line drawing (from 0.25 to 0.45)
+            const lineProgress = Math.max(0, Math.min(1, (progress - 0.25) / 0.20));
+            fill12.style.transform = `scaleX(${lineProgress})`;
+            if (lineProgress > 0.9 && activeBeat < 2) triggerShimmer(connector12);
+        } else {
+            fill12.style.transform = 'scaleX(0)';
+        }
+
+        if (newBeat >= 2) {
+            updateStepUI(step2, newBeat === 2 ? 'active' : 'completed');
+            if (newBeat === 2 && activeBeat < 2) triggerPulse(step2);
+        } else {
+            updateStepUI(step2, 'ghosted');
+        }
+
+        // Connector 2-3 & Step 3
+        const fill23 = connector23.querySelector('.connector-line-fill');
+        if (progress > 0.58) {
+            const lineProgress = Math.max(0, Math.min(1, (progress - 0.58) / 0.20));
+            fill23.style.transform = `scaleX(${lineProgress})`;
+            if (lineProgress > 0.9 && activeBeat < 3) triggerShimmer(connector23);
+        } else {
+            fill23.style.transform = 'scaleX(0)';
+        }
+
+        if (newBeat >= 3) {
+            updateStepUI(step3, 'active');
+            if (newBeat === 3 && activeBeat < 3) triggerPulse(step3);
+        } else {
+            updateStepUI(step3, 'ghosted');
+        }
+
+        activeBeat = newBeat;
+    }
+
+    // ===== BEAT VISIBILITY HELPERS =====
+    function updateBeatOpacity(beatEl, progress, startRange, endRange) {
+        // Fade in over first 15% of range, fade out over last 15% of range
+        const rangeLen = endRange - startRange;
+        const fadeInEnd = startRange + rangeLen * 0.15;
+        const fadeOutStart = endRange - rangeLen * 0.15;
+
+        let opacity = 0;
+        if (progress >= startRange && progress <= endRange) {
+            if (progress < fadeInEnd) {
+                opacity = (progress - startRange) / (fadeInEnd - startRange);
+            } else if (progress > fadeOutStart) {
+                opacity = 1 - (progress - fadeOutStart) / (endRange - fadeOutStart);
+            } else {
+                opacity = 1;
+            }
+        }
+        beatEl.style.opacity = Math.max(0, Math.min(1, opacity));
+
+        // Slide from left animation
+        const slideEls = beatEl.querySelectorAll('.slide-from-left');
+        if (opacity > 0.1) {
+            slideEls.forEach(el => el.classList.add('visible'));
+        } else {
+            slideEls.forEach(el => el.classList.remove('visible'));
+        }
+
+        return opacity;
+    }
+
+    function updateBeat4(progress) {
+        // Beat 4: 70% - 100% — no fade out, stays visible
+        const startRange = 0.70;
+        const fadeInEnd = 0.78;
+
+        let opacity = 0;
+        if (progress >= startRange) {
+            if (progress < fadeInEnd) {
+                opacity = (progress - startRange) / (fadeInEnd - startRange);
+            } else {
+                opacity = 1;
+            }
+        }
+        beat4.style.opacity = Math.max(0, Math.min(1, opacity));
+
+        // Stagger animation
+        const staggerItems = beat4.querySelectorAll('.stagger-item');
+        if (opacity > 0.3 && !beat4Revealed) {
+            beat4Revealed = true;
+            staggerItems.forEach((el) => {
+                const delay = parseInt(el.getAttribute('data-delay')) || 0;
+                setTimeout(() => {
+                    el.classList.add('visible');
+                }, delay);
+            });
+        } else if (opacity <= 0.05) {
+            beat4Revealed = false;
+            staggerItems.forEach(el => el.classList.remove('visible'));
+        }
+
+        return opacity;
+    }
+
+    // ===== RAF LOOP =====
+    let ticking = false;
+
+    function onScroll() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+            ticking = true;
+        }
+    }
+
+    function update() {
+        ticking = false;
+
+        if (!allLoaded) return;
+
+        const progress = getScrollProgress();
+
+        // Frame index
+        targetFrame = Math.round(progress * (TOTAL_FRAMES - 1));
+        if (targetFrame !== lastDrawnFrame) {
+            drawFrame(targetFrame);
+            currentFrame = targetFrame;
+        }
+
+        // Scroll progress bar
+        progressBar.style.height = (progress * 100) + '%';
+        if (progress >= 0.99) {
+            progressBar.style.opacity = '0';
+        } else {
+            progressBar.style.opacity = '1';
+        }
+
+        // Scroll invitation
+        if (progress > 0.08) {
+            scrollInvite.style.opacity = '0';
+        } else {
+            scrollInvite.style.opacity = '1';
+        }
+
+        // Beat 1: 0-10% — no text overlay, just the bowl
+        // Beat 2: 10-40%
+        updateBeatOpacity(beat2, progress, 0.10, 0.40);
+        // Beat 3: 40-70%
+        updateBeatOpacity(beat3, progress, 0.40, 0.70);
+        // Beat 4: 70-100% — grand reveal
+        const b4opacity = updateBeat4(progress);
+
+        // Continue arrow — visible when beat 4 is fully in
+        if (b4opacity >= 0.95 && progress > 0.90) {
+            continueArrow.style.opacity = '1';
+        } else {
+            continueArrow.style.opacity = '0';
+        }
+
+        // Update Kinetic Flow Section
+        updateKineticFlow();
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    // ===== INIT =====
+    preloadFrames();
+
+    // Initial draw
+    if (allLoaded) drawFrame(0);
+
+})();
+</script>
+
+</body></html>
