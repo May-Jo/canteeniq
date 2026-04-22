@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>CanteenIQ | Kinetic Hearth Admin</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;500;600;700;800&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#ffa84f",
+                        "primary-container": "#fe9400",
+                        secondary: "#fecb00",
+                        tertiary: "#81ecff",
+                        surface: "#0e0e0e",
+                        background: "#000000",
+                        "on-surface": "#ffffff",
+                        "on-surface-variant": "#adaaaa",
+                        error: "#ff7351",
+                        "outline-variant": "#484847"
+                    },
+                    fontFamily: {
+                        headline: ["Plus Jakarta Sans"],
+                        display: ["Plus Jakarta Sans"],
+                        body: ["Manrope"],
+                        label: ["Plus Jakarta Sans"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: #1a1a1a;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .sidebar-active {
+            color: #ffa84f;
+            font-weight: 700;
+            border-right: 4px solid #ffa84f;
+            background: rgba(255, 168, 79, 0.05);
+        }
+        body {
+            background-color: #000000;
+            font-family: 'Manrope', sans-serif;
+            color: #ffffff;
+        }
+        .amber-gradient {
+            background: linear-gradient(135deg, #ffa84f 0%, #fe9400 100%);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden no-scrollbar bg-black">
+
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 z-40 bg-[#0e0e0e] flex flex-col h-full py-8 border-r border-white/5 font-['Plus_Jakarta_Sans'] tracking-tight">
+    <div class="px-8 mb-10">
+        <h1 class="text-xl font-black text-primary uppercase tracking-widest leading-tight">CanteenIQ</h1>
+        <p class="text-[10px] text-zinc-500 tracking-[0.2em] font-medium">KINETIC HEARTH</p>
+    </div>
+    <nav class="flex-grow space-y-1">
+        <a class="sidebar-active py-3 px-6 flex items-center gap-3 transition-all duration-300" href="#">
+            <span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+            Dashboard
+        </a>
+        <a class="text-zinc-500 hover:text-zinc-200 py-3 px-6 flex items-center gap-3 hover:bg-zinc-900/50 transition-all duration-300" href="#">
+            <span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+            Inventory
+        </a>
+        <a class="text-zinc-500 hover:text-zinc-200 py-3 px-6 flex items-center gap-3 hover:bg-zinc-900/50 transition-all duration-300" href="../orders.html">
+            <span class="material-symbols-outlined" data-icon="restaurant_menu">restaurant_menu</span>
+            Live Orders
+        </a>
+        <a class="text-zinc-500 hover:text-zinc-200 py-3 px-6 flex items-center gap-3 hover:bg-zinc-900/50 transition-all duration-300" href="#">
+            <span class="material-symbols-outlined" data-icon="monitoring">monitoring</span>
+            Analytics
+        </a>
+        <a class="text-zinc-500 hover:text-zinc-200 py-3 px-6 flex items-center gap-3 hover:bg-zinc-900/50 transition-all duration-300" href="#">
+            <span class="material-symbols-outlined" data-icon="group">group</span>
+            Staff Management
+        </a>
+    </nav>
+    <div class="px-6 mb-8">
+        <button class="w-full amber-gradient text-black font-bold py-3 rounded-2xl flex items-center justify-center gap-2 shadow-lg active:scale-[0.98] transition-transform">
+            <span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+            New Entry
+        </button>
+    </div>
+    <div class="border-t border-white/5 pt-6">
+        <a class="text-zinc-500 hover:text-zinc-200 py-3 px-6 flex items-center gap-3 hover:bg-zinc-900/50 transition-all duration-300" href="#">
+            <span class="material-symbols-outlined" data-icon="settings">settings</span>
+            Settings
+        </a>
+        <a class="text-zinc-500 hover:text-zinc-200 py-3 px-6 flex items-center gap-3 hover:bg-zinc-900/50 transition-all duration-300" href="../index.html">
+            <span class="material-symbols-outlined" data-icon="logout">logout</span>
+            Exit to Home
+        </a>
+    </div>
+</aside>
+
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-30 h-20 bg-black flex items-center justify-between px-10 ml-64 border-b border-white/5 font-['Plus_Jakarta_Sans'] font-medium">
+    <div class="flex items-center gap-6 flex-1">
+        <div class="relative w-full max-w-md group rounded-full transition-all">
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" data-icon="search">search</span>
+            <input class="w-full bg-[#1a1a1a] border border-white/5 rounded-full py-2 pl-12 pr-4 text-sm text-white focus:ring-1 focus:ring-primary/50 placeholder:text-zinc-600" placeholder="Search orders, staff, or analytics..." type="text"/>
+        </div>
+    </div>
+    <div class="flex items-center gap-6">
+        <div class="flex items-center gap-4">
+            <span class="material-symbols-outlined text-zinc-500 hover:text-primary cursor-pointer" data-icon="notifications">notifications</span>
+            <span class="material-symbols-outlined text-zinc-500 hover:text-primary cursor-pointer" data-icon="grid_view">grid_view</span>
+        </div>
+    </div>
+</header>
+
+<main class="ml-64 p-10 min-h-[calc(100vh-5rem)]">
+    <!-- Welcome Header -->
+    <div class="flex justify-between items-end mb-10">
+        <div>
+            <h2 class="text-4xl font-extrabold font-headline tracking-tighter text-white mb-2">Service Overview</h2>
+            <p class="text-zinc-500 font-body">The kitchen is operating at <span class="text-primary font-bold">94% efficiency</span> today.</p>
+        </div>
+        <div class="flex gap-4">
+            <div class="flex flex-col items-end">
+                <span class="text-[10px] text-zinc-500 uppercase font-bold tracking-widest mb-1">Live Status</span>
+                <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold border border-primary/20 flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
+                    Active Peak
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Metrics Bento -->
+    <section class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+        <div class="glass-panel p-6 relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-4 text-primary/10">
+                <span class="material-symbols-outlined text-5xl" data-icon="payments">payments</span>
+            </div>
+            <p class="text-zinc-500 text-xs font-label mb-1 uppercase tracking-wider">Today's Revenue</p>
+            <h3 class="text-3xl font-black font-headline text-white">$12,482.00</h3>
+            <p class="mt-3 text-primary text-[10px] font-bold">+12.5% from yesterday</p>
+        </div>
+        <div class="glass-panel p-6">
+            <p class="text-zinc-500 text-xs font-label mb-1 uppercase tracking-wider">Active Orders</p>
+            <h3 class="text-3xl font-black font-headline text-white">42</h3>
+            <div class="mt-4 h-1.5 w-full bg-zinc-900 rounded-full overflow-hidden flex">
+                <div class="h-full bg-primary" style="width: 75%"></div>
+            </div>
+            <p class="mt-2 text-[10px] text-zinc-500 uppercase tracking-widest">6 nearing threshold</p>
+        </div>
+        <div class="glass-panel p-6">
+            <p class="text-zinc-500 text-xs font-label mb-1 uppercase tracking-wider">Inventory Alerts</p>
+            <div class="flex items-center gap-3">
+                <h3 class="text-3xl font-black font-headline text-error">03</h3>
+                <span class="bg-error/10 text-error text-[10px] px-2 py-0.5 rounded font-black uppercase tracking-tighter">Action Required</span>
+            </div>
+            <p class="mt-4 text-[10px] text-zinc-500 font-body">Quinoa, Avocado low stock</p>
+        </div>
+        <div class="glass-panel p-6">
+            <p class="text-zinc-500 text-xs font-label mb-1 uppercase tracking-wider">Peak Hours</p>
+            <h3 class="text-3xl font-black font-headline text-white">12:30 PM</h3>
+            <div class="mt-4 flex items-end gap-1 h-6">
+                <div class="w-1.5 h-1/3 bg-zinc-800 rounded-t-sm"></div>
+                <div class="w-1.5 h-1/2 bg-zinc-800 rounded-t-sm"></div>
+                <div class="w-1.5 h-full bg-primary rounded-t-sm"></div>
+                <div class="w-1.5 h-2/3 bg-zinc-800 rounded-t-sm"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Monitor and Analytics -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
+        <div class="lg:col-span-2 glass-panel p-8">
+            <div class="flex justify-between items-center mb-8">
+                <h3 class="text-xl font-bold font-headline flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary" data-icon="timer">timer</span>
+                    Live Order Monitor
+                </h3>
+                <span class="text-[10px] bg-zinc-900 text-zinc-500 px-3 py-1 rounded-full border border-white/5 uppercase font-bold tracking-widest">Filter: All</span>
+            </div>
+            <div class="space-y-4">
+                <div class="flex items-center justify-between p-4 bg-black/40 rounded-2xl border border-white/5">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-zinc-900 flex items-center justify-center text-zinc-500">
+                            <span class="material-symbols-outlined" data-icon="lunch_dining">lunch_dining</span>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white uppercase text-sm">#ORD-2849</h4>
+                            <p class="text-[10px] text-zinc-500">2x Wagyu Umami Burger, 1x Truffle Fries</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-6">
+                        <span class="text-[10px] font-black uppercase tracking-widest px-3 py-1.5 bg-primary/10 text-primary border border-primary/20 rounded-lg">Preparing</span>
+                        <div class="w-24 h-1.5 bg-zinc-900 rounded-full overflow-hidden">
+                            <div class="h-full bg-primary w-[65%]"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between p-4 bg-black/40 rounded-2xl border border-white/5">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-zinc-900 flex items-center justify-center text-zinc-500">
+                            <span class="material-symbols-outlined" data-icon="local_drink">local_drink</span>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white uppercase text-sm">#ORD-2851</h4>
+                            <p class="text-[10px] text-zinc-500">1x Cold Brew, 1x Avocado Sourdough</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-6">
+                        <span class="text-[10px] font-black uppercase tracking-widest px-3 py-1.5 bg-secondary/10 text-secondary border border-secondary/20 rounded-lg">Ready</span>
+                        <div class="w-24 h-1.5 bg-zinc-900 rounded-full overflow-hidden">
+                            <div class="h-full bg-secondary w-full"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-panel p-8 flex flex-col">
+            <h3 class="text-xl font-bold font-headline mb-8 flex items-center gap-3">
+                <span class="material-symbols-outlined text-primary" data-icon="donut_large">donut_large</span>
+                Meal Distribution
+            </h3>
+            <div class="relative flex items-center justify-center mb-10">
+                <svg class="w-48 h-48 transform -rotate-90">
+                    <circle class="text-zinc-900" cx="96" cy="96" fill="transparent" r="80" stroke="currentColor" stroke-width="12"></circle>
+                    <circle class="text-primary" cx="96" cy="96" fill="transparent" r="80" stroke="currentColor" stroke-dasharray="502" stroke-dashoffset="150" stroke-width="12"></circle>
+                    <circle class="text-secondary" cx="96" cy="96" fill="transparent" r="80" stroke="currentColor" stroke-dasharray="502" stroke-dashoffset="400" stroke-width="12"></circle>
+                    <circle class="text-tertiary" cx="96" cy="96" fill="transparent" r="80" stroke="currentColor" stroke-dasharray="502" stroke-dashoffset="460" stroke-width="12"></circle>
+                </svg>
+                <div class="absolute flex flex-col items-center">
+                    <span class="text-4xl font-black font-headline">1.2k</span>
+                    <span class="text-[10px] text-zinc-500 uppercase font-black uppercase">Total</span>
+                </div>
+            </div>
+            <div class="space-y-4 text-[11px] font-bold uppercase tracking-widest">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-primary"></span> Main Course</div>
+                    <span class="text-white">65%</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-secondary"></span> Light Snacks</div>
+                    <span class="text-white">22%</span>
+                </div>
+                <div class="flex justify-between items-center text-zinc-600">
+                    <div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-tertiary"></span> Beverages</div>
+                    <span>13%</span>
+                </div>
+            </div>
+            <button class="mt-8 py-3 border border-white/5 rounded-xl text-zinc-500 text-[10px] uppercase font-black tracking-widest hover:bg-zinc-900 transition-all">Detailed Report</button>
+        </div>
+    </div>
+
+    <!-- Bottom Row -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="glass-panel p-8">
+            <div class="flex justify-between items-center mb-6">
+                <h4 class="font-black text-lg uppercase">Low Stock Radar</h4>
+                <span class="text-error text-[10px] font-black uppercase tracking-widest">Stock Critical</span>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="p-4 bg-black rounded-2xl border border-white/5">
+                    <p class="text-zinc-500 text-[10px] font-bold uppercase mb-1">Avocados</p>
+                    <p class="font-black text-white text-lg">12 units left</p>
+                    <div class="h-1 w-12 bg-primary mt-2 rounded-full"></div>
+                </div>
+                <div class="p-4 bg-black rounded-2xl border border-white/5">
+                    <p class="text-zinc-500 text-[10px] font-bold uppercase mb-1">Quinoa</p>
+                    <p class="font-black text-white text-lg">2kg left</p>
+                    <div class="h-1 w-12 bg-error mt-2 rounded-full"></div>
+                </div>
+            </div>
+        </div>
+        <div class="glass-panel p-8 relative overflow-hidden">
+            <h4 class="font-black text-lg uppercase mb-6">Top Performers</h4>
+            <div class="flex -space-x-4 mb-4">
+                <div class="w-12 h-12 rounded-full border-4 border-[#1a1a1a] bg-zinc-800 flex items-center justify-center font-black">AJ</div>
+                <div class="w-12 h-12 rounded-full border-4 border-[#1a1a1a] bg-zinc-800 flex items-center justify-center font-black">KM</div>
+                <div class="w-12 h-12 rounded-full border-4 border-[#1a1a1a] bg-zinc-800 flex items-center justify-center font-black">RJ</div>
+                <div class="w-12 h-12 rounded-full border-4 border-[#1a1a1a] bg-zinc-700 flex items-center justify-center font-black text-xs">+12</div>
+            </div>
+            <p class="text-xs text-zinc-500">Shift Efficiency: <span class="text-primary font-bold">114%</span> vs average.</p>
+            <span class="absolute top-8 right-8 material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">star</span>
+        </div>
+    </div>
+</main>
+
+<!-- Floating Action Button -->
+<button class="fixed bottom-10 right-10 w-16 h-16 rounded-full amber-gradient shadow-2xl flex items-center justify-center text-black active:scale-95 transition-all z-50">
+    <span class="material-symbols-outlined text-3xl" data-icon="bolt">bolt</span>
+</button>
+
+</body>
+</html>

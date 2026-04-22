@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>CanteenIQ | My Feasts</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;500;600;700;800&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#ffa84f",
+                        secondary: "#fecb00",
+                        tertiary: "#81ecff",
+                        surface: "#1a1a1a",
+                        background: "#000000",
+                        "on-surface": "#ffffff",
+                        "surface-container-low": "#131313",
+                        "surface-container-lowest": "#000000",
+                        "surface-container-highest": "#262626"
+                    },
+                    fontFamily: {
+                        headline: ["Plus Jakarta Sans"],
+                        display: ["Plus Jakarta Sans"],
+                        body: ["Manrope"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(38, 38, 38, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .status-pill {
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        .preparing { background: rgba(255, 168, 79, 0.1); color: #ffa84f; border: 1px solid rgba(255, 168, 79, 0.2); }
+        .ready { background: rgba(129, 236, 255, 0.1); color: #81ecff; border: 1px solid rgba(129, 236, 255, 0.2); }
+        .completed { background: rgba(255, 255, 255, 0.05); color: #888; border: 1px solid rgba(255, 255, 255, 0.1); }
+        
+        body {
+            background-color: #000000;
+            font-family: 'Manrope', sans-serif;
+            color: #ffffff;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body class="overflow-hidden">
+
+<!-- TopNavBar (Consistent with Dashboard) -->
+<header class="fixed top-0 w-full z-50 bg-neutral-900/60 backdrop-blur-xl border-b border-white/5">
+    <div class="flex justify-between items-center px-6 py-4 w-full max-w-screen-2xl mx-auto">
+        <div class="flex items-center gap-8">
+            <div class="text-xl font-black text-orange-500 tracking-tighter">The Kinetic Hearth</div>
+            <nav class="hidden md:flex gap-6 items-center">
+                <a class="font-['Plus_Jakarta_Sans'] text-neutral-400 font-medium hover:text-orange-400 transition-colors" href="dashboards/student.html">Dashboard</a>
+                <a class="font-['Plus_Jakarta_Sans'] text-neutral-400 font-medium hover:text-orange-400 transition-colors underline decoration-orange-500 underline-offset-4" href="#">Orders</a>
+            </nav>
+        </div>
+        <div class="flex items-center gap-6">
+            <div class="flex items-center gap-4">
+                <div class="text-right hidden sm:block">
+                    <p class="text-xs font-bold text-white">Julian Spark</p>
+                    <p class="text-[9px] text-zinc-500 uppercase font-black font-['Plus_Jakarta_Sans']">Student Card</p>
+                </div>
+                <div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant/30">
+                    <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuByVCxraS6-OSxFtB4uKlQgwurmtJMyjpHiXPscrmtPU6M69Wj-UDu3y1Ih6X9FDiXMqToCQ8CwZYeBmDn9SkrwGkWOY5YHPIcBRooASCoTqwqcTEEEAj_W8xzQspwmFwA6R_134SbXEg5isdlI5HITOtD7peIjDbE6iHliF6x1dp2RJ3xXZ3Gk7PaoLVA5iiIqFLcs3iUVlE4Re_VGIphHx0aH0445VbAhGa0hvb0oaqOTue4ojecKw-g7Dh2C10lFdjDvlHgOfw"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- SideNavBar (Consistent with Dashboard) -->
+<aside class="h-screen w-64 fixed left-0 top-0 z-40 bg-neutral-950/80 backdrop-blur-2xl border-r border-neutral-800/20 shadow-2xl hidden md:flex flex-col py-8 gap-2">
+    <div class="px-6 mb-10 pt-20">
+        <h2 class="text-lg font-bold text-neutral-100">The Hearth</h2>
+        <p class="font-['Manrope'] text-[10px] uppercase tracking-[0.2em] text-neutral-500">Digital Concierge</p>
+    </div>
+    <nav class="flex flex-col gap-1">
+        <a class="flex items-center gap-3 text-neutral-500 px-4 py-3 hover:bg-neutral-800/40 hover:text-neutral-200 transition-all hover:translate-x-1 duration-200" href="dashboards/student.html">
+            <span class="material-symbols-outlined">dashboard</span>
+            <span class="font-['Manrope'] text-sm uppercase tracking-widest">Dashboard</span>
+        </a>
+        <a class="flex items-center gap-3 text-neutral-500 px-4 py-3 hover:bg-neutral-800/40 hover:text-neutral-200 transition-all hover:translate-x-1 duration-200" href="menu.html">
+            <span class="material-symbols-outlined">restaurant</span>
+            <span class="font-['Manrope'] text-sm uppercase tracking-widest">Menu</span>
+        </a>
+        <a class="flex items-center gap-3 bg-gradient-to-r from-orange-500/20 to-transparent text-orange-500 border-l-4 border-orange-500 px-4 py-3 hover:translate-x-1 duration-200" href="#">
+            <span class="material-symbols-outlined">receipt_long</span>
+            <span class="font-['Manrope'] text-sm uppercase tracking-widest">Orders</span>
+        </a>
+        <a class="flex items-center gap-3 text-neutral-500 px-4 py-3 hover:bg-neutral-800/40 hover:text-neutral-200 transition-all hover:translate-x-1 duration-200" href="#">
+            <span class="material-symbols-outlined">settings</span>
+            <span class="font-['Manrope'] text-sm uppercase tracking-widest">Settings</span>
+        </a>
+    </nav>
+</aside>
+
+<main class="md:ml-64 pt-24 pb-20 px-6 md:px-12 h-screen overflow-y-auto no-scrollbar bg-surface-container-lowest">
+    <div class="max-w-6xl mx-auto">
+        <div class="flex justify-between items-end mb-12">
+            <div>
+                <h1 class="font-headline text-5xl font-extrabold tracking-tighter text-white mb-2 leading-none">Your <span class="text-primary italic">Archives.</span></h1>
+                <p class="font-body text-neutral-400 text-lg max-w-lg mt-2">Track your active nourishment and browse your complete banquet history.</p>
+            </div>
+        </div>
+
+        <!-- Live Orders Section -->
+        <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-8 ml-1">Live Tracking</h3>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+            <div class="glass-panel p-8 rounded-[2rem] border border-white/5 relative overflow-hidden group">
+                <div class="flex justify-between items-start mb-10">
+                    <div>
+                        <div class="flex items-center gap-4 mb-2">
+                            <h4 class="text-2xl font-headline font-bold text-white tracking-tight">#ORD-9284</h4>
+                            <span class="status-pill preparing">Preparing</span>
+                        </div>
+                        <p class="text-neutral-500 text-xs font-medium">Est. Arrival: 12:45 PM • 12 mins remaining</p>
+                    </div>
+                    <div class="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary border border-primary/20">
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">cooking</span>
+                    </div>
+                </div>
+                <div class="space-y-4 mb-4">
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="text-neutral-400">Tonkotsu Hearth Ramen</span>
+                        <span class="text-white font-bold">Rs. 350.00</span>
+                    </div>
+                </div>
+                <div class="pt-6 mt-6 border-t border-white/5 flex justify-between items-center">
+                    <span class="text-[10px] text-zinc-600 font-bold uppercase tracking-widest">Total Price</span>
+                    <span class="text-xl font-headline font-black text-primary">Rs. 350.00</span>
+                </div>
+            </div>
+
+            <div class="glass-panel p-8 rounded-[2rem] border-tertiary/20 bg-tertiary/5 relative overflow-hidden group">
+                <div class="flex justify-between items-start mb-10">
+                    <div>
+                        <div class="flex items-center gap-4 mb-2">
+                            <h4 class="text-2xl font-headline font-bold text-white tracking-tight">#ORD-9280</h4>
+                            <span class="status-pill ready">Ready for Pickup</span>
+                        </div>
+                        <p class="text-tertiary text-xs font-bold uppercase tracking-widest">Counter #04</p>
+                    </div>
+                    <div class="w-12 h-12 bg-tertiary/10 rounded-2xl flex items-center justify-center text-tertiary border border-tertiary/20 group-hover:scale-110 transition-transform">
+                        <span class="material-symbols-outlined">shopping_basket</span>
+                    </div>
+                </div>
+                <p class="text-neutral-500 text-sm italic mb-8 leading-relaxed">Your order has been expertly prepared and is waiting at the hearth.</p>
+                <button class="w-full py-4 bg-tertiary text-black font-black rounded-2xl text-xs uppercase tracking-widest shadow-lg shadow-tertiary/20 hover:scale-[1.02] active:scale-95 transition-all">Show Digital Token</button>
+            </div>
+        </div>
+
+        <!-- Previous Orders -->
+        <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600 mb-8 ml-1">Past Banquet Archives</h3>
+        <div class="space-y-4">
+            <div class="glass-panel p-6 rounded-[1.5rem] flex items-center justify-between border border-transparent hover:border-white/5 hover:bg-white/5 transition-all cursor-pointer">
+                <div class="flex items-center gap-6">
+                    <div class="w-14 h-14 rounded-2xl bg-zinc-900 flex items-center justify-center border border-white/5">
+                        <span class="material-symbols-outlined text-zinc-500 text-3xl">restaurant</span>
+                    </div>
+                    <div>
+                        <h5 class="text-white font-bold text-lg tracking-tight">#ORD-9152</h5>
+                        <p class="text-[10px] text-zinc-600 font-bold uppercase tracking-widest mt-1">Yesterday • 01:20 PM</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-16">
+                    <div class="text-right">
+                        <p class="text-xs text-zinc-600 font-bold uppercase mb-1">Total</p>
+                        <p class="text-lg font-headline font-black text-white">Rs. 240.00</p>
+                    </div>
+                    <div class="flex items-center gap-6">
+                        <span class="status-pill completed">Completed</span>
+                        <span class="material-symbols-outlined text-zinc-800 hover:text-primary transition-colors">chevron_right</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-panel p-6 rounded-[1.5rem] flex items-center justify-between border border-transparent hover:border-white/5 hover:bg-white/5 transition-all cursor-pointer">
+                <div class="flex items-center gap-6">
+                    <div class="w-14 h-14 rounded-2xl bg-zinc-900 flex items-center justify-center border border-white/5">
+                        <span class="material-symbols-outlined text-zinc-500 text-3xl">coffee</span>
+                    </div>
+                    <div>
+                        <h5 class="text-white font-bold text-lg tracking-tight">#ORD-9120</h5>
+                        <p class="text-[10px] text-zinc-600 font-bold uppercase tracking-widest mt-1">20 Apr 2026 • 09:45 AM</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-16">
+                    <div class="text-right">
+                        <p class="text-xs text-zinc-600 font-bold uppercase mb-1">Total</p>
+                        <p class="text-lg font-headline font-black text-white">Rs. 80.00</p>
+                    </div>
+                    <div class="flex items-center gap-6">
+                        <span class="status-pill completed">Completed</span>
+                        <span class="material-symbols-outlined text-zinc-800 hover:text-primary transition-colors">chevron_right</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

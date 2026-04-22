@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>CanteenIQ | Staff Command Center</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;500;600;700;800&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#ffa84f",
+                        secondary: "#fecb00",
+                        tertiary: "#81ecff",
+                        surface: "#1a1a1a",
+                        background: "#000000",
+                        "on-surface": "#ffffff",
+                        error: "#ff7351",
+                        "urgent-bg": "#451a1a"
+                    },
+                    fontFamily: {
+                        headline: ["Plus Jakarta Sans"],
+                        display: ["Plus Jakarta Sans"],
+                        body: ["Manrope"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .staff-card {
+            background: #121212;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+        }
+        .order-pill {
+            background: rgba(255, 168, 79, 0.1);
+            color: #ffa84f;
+            border: 1px solid rgba(255, 168, 79, 0.2);
+        }
+        .ready-status {
+            border-left: 4px solid #81ecff;
+        }
+        .amber-gradient {
+            background: linear-gradient(135deg, #ffa84f 0%, #fe9400 100%);
+        }
+        body {
+            background-color: #000000;
+            font-family: 'Manrope', sans-serif;
+            color: #ffffff;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden no-scrollbar bg-black">
+
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 z-40 bg-[#0e0e0e] flex flex-col h-full py-8 border-r border-white/5 font-['Plus_Jakarta_Sans'] tracking-tight">
+    <a href="../index.html" class="px-8 mb-10 flex items-center gap-3 hover:opacity-80 transition-opacity">
+        <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
+            <span class="material-symbols-outlined text-black font-black">restaurant</span>
+        </div>
+        <div>
+            <h1 class="text-lg font-black text-white leading-tight">CanteenIQ</h1>
+            <p class="text-[10px] text-zinc-500 tracking-[0.1em] font-medium uppercase">Staff Dashboard</p>
+        </div>
+    </a>
+    <nav class="flex-grow space-y-2 px-4">
+        <a class="bg-primary/10 text-primary py-3 px-4 rounded-xl flex items-center gap-3 font-bold transition-all" href="#">
+            <span class="material-symbols-outlined" data-icon="assignment_late">assignment_late</span>
+            Live Orders
+        </a>
+        <a class="text-zinc-500 hover:text-zinc-200 py-3 px-4 flex items-center gap-3 hover:bg-zinc-900/50 rounded-xl transition-all" href="#">
+            <span class="material-symbols-outlined" data-icon="cooking">cooking</span>
+            Kitchen Queue
+        </a>
+        <a class="text-zinc-500 hover:text-zinc-200 py-3 px-4 flex items-center gap-3 hover:bg-zinc-900/50 rounded-xl transition-all" href="../orders.html">
+            <span class="material-symbols-outlined" data-icon="history">history</span>
+            Order History
+        </a>
+        <a class="text-zinc-500 hover:text-zinc-200 py-3 px-4 flex items-center gap-3 hover:bg-zinc-900/50 rounded-xl transition-all" href="../menu.html">
+            <span class="material-symbols-outlined" data-icon="lunch_dining">lunch_dining</span>
+            Menu Status
+        </a>
+    </nav>
+    <div class="px-6 mb-4">
+        <button class="w-full bg-red-950/30 text-red-500 border border-red-500/20 font-bold py-4 rounded-2xl flex items-center justify-center gap-2 hover:bg-red-500 hover:text-white transition-all shadow-lg active:scale-[0.98]">
+            <span class="material-symbols-outlined text-xl" data-icon="error">error</span>
+            EMERGENCY STOP
+        </button>
+    </div>
+</aside>
+
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-30 h-20 bg-black flex items-center justify-between px-10 ml-64 border-b border-white/5 font-['Plus_Jakarta_Sans'] font-medium">
+    <div class="flex items-center gap-10">
+        <h2 class="text-primary font-bold text-lg">CanteenIQ</h2>
+        <nav class="flex gap-8 text-sm">
+            <a class="text-primary border-b-2 border-primary pb-7" href="#">Dashboard</a>
+            <a class="text-zinc-500 hover:text-white pb-7" href="#">Inventory</a>
+            <a class="text-zinc-500 hover:text-white pb-7" href="#">Staffing</a>
+        </nav>
+    </div>
+    <div class="flex items-center gap-6">
+        <div class="flex items-center gap-4 text-zinc-500">
+            <span class="material-symbols-outlined cursor-pointer hover:text-white" data-icon="notifications">notifications</span>
+            <span class="material-symbols-outlined cursor-pointer hover:text-white" data-icon="settings">settings</span>
+        </div>
+        <img alt="Staff Avatar" class="w-10 h-10 rounded-full border-2 border-zinc-800" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6E-XupSYVoH8rzUSbL_BWOUyq8hFJoev21NLb41rJxKWEeKSopCG8SXzw7YsBl_agWYrjaO4w3yy6kIXClP9_gIb-RuuvdllmmW6jIglhAzkoSCfZUa3cTLTeCOmkWH5uietBTN7WwLH_IQlXqwZvVbwoIQ5_vQhZ7XG7_15oSzxelEcmwFVtoS1NjY0M7TPlNeS5fwH1szcxt5y_6Aulrzx9cEWYx84UllnQJ9mmxFGn-MCbfhxCPsDBFbMEtCBUnEkx_-85FQ"/>
+    </div>
+</header>
+
+<main class="ml-64 p-10 min-h-[calc(100vh-5rem)] flex gap-10">
+    <!-- Main Dashboard Section -->
+    <div class="flex-grow">
+        <!-- Top Stats Row -->
+        <section class="grid grid-cols-4 gap-6 mb-10">
+            <div class="staff-card p-6 flex flex-col justify-between">
+                <span class="text-zinc-400 text-xs font-bold uppercase tracking-widest">Active Orders</span>
+                <div class="flex items-baseline justify-between mt-2">
+                    <h3 class="text-4xl font-black">12</h3>
+                    <span class="material-symbols-outlined text-primary/40 text-3xl">local_fire_department</span>
+                </div>
+            </div>
+            <div class="staff-card p-6 flex flex-col justify-between border-primary/20 bg-primary/5">
+                <span class="text-zinc-400 text-xs font-bold uppercase tracking-widest">Pending</span>
+                <div class="flex items-baseline justify-between mt-2">
+                    <h3 class="text-4xl font-black text-secondary">05</h3>
+                    <span class="material-symbols-outlined text-secondary/40 text-3xl">schedule</span>
+                </div>
+            </div>
+            <div class="staff-card p-6 flex flex-col justify-between">
+                <span class="text-zinc-400 text-xs font-bold uppercase tracking-widest">Completed</span>
+                <div class="flex items-baseline justify-between mt-2">
+                    <h3 class="text-4xl font-black text-tertiary">148</h3>
+                    <span class="material-symbols-outlined text-tertiary/40 text-3xl">check_circle</span>
+                </div>
+            </div>
+            <div class="staff-card p-6 bg-red-950/20 border-red-500/20 flex flex-col justify-center">
+                <div class="flex items-center gap-2 text-red-500 mb-1">
+                    <span class="material-symbols-outlined text-sm">warning</span>
+                    <span class="text-[10px] font-black uppercase tracking-widest">Urgent Alerts</span>
+                </div>
+                <h4 class="font-bold text-sm">Chicken Stock Low</h4>
+                <p class="text-[10px] text-zinc-500">Order #882 waiting on refill</p>
+            </div>
+        </section>
+
+        <!-- Live Order Queue -->
+        <section>
+            <div class="flex justify-between items-center mb-8">
+                <h3 class="text-2xl font-extrabold font-headline">Live Order Queue</h3>
+                <div class="flex bg-zinc-900 rounded-xl p-1 text-[10px] font-black uppercase">
+                    <button class="px-4 py-1.5 bg-zinc-800 rounded-lg text-white">ALL</button>
+                    <button class="px-4 py-1.5 text-zinc-500 hover:text-white transition-colors">URGENT</button>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Order Card: Priority -->
+                <div class="staff-card p-8 flex items-center justify-between border-primary/10">
+                    <div class="flex items-center gap-8">
+                        <div class="w-16 h-16 rounded-2xl bg-zinc-950 border border-primary/20 flex flex-col items-center justify-center">
+                            <span class="text-xl font-black text-primary">12'</span>
+                            <span class="text-[8px] text-zinc-600 uppercase font-black">Elapsed</span>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-3 mb-1">
+                                <h4 class="text-xl font-black uppercase tracking-tight">#ORD-9042</h4>
+                                <span class="bg-primary/10 text-primary text-[8px] font-black px-2 py-0.5 rounded uppercase tracking-widest border border-primary/20">Priority</span>
+                            </div>
+                            <p class="text-xs text-zinc-500 font-medium mb-3">Customer: James Wilson • Table 12</p>
+                            <div class="space-y-1">
+                                <p class="text-sm font-bold text-zinc-200">2x Classic Wagyu Burger <span class="text-zinc-600 font-normal">(No Pickles)</span></p>
+                                <p class="text-sm font-bold text-zinc-200">1x Truffle Parmesan Fries</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-3">
+                        <button class="amber-gradient text-black font-black px-8 py-3 rounded-xl text-xs hover:scale-105 active:scale-95 transition-all">Mark Preparing</button>
+                        <button class="bg-zinc-800 text-zinc-400 font-bold px-8 py-3 rounded-xl text-xs hover:text-white transition-colors">View Details</button>
+                    </div>
+                </div>
+
+                <!-- Order Card: Regular -->
+                <div class="staff-card p-8 flex items-center justify-between">
+                    <div class="flex items-center gap-8">
+                        <div class="w-16 h-16 rounded-2xl bg-zinc-950 flex flex-col items-center justify-center">
+                            <span class="text-xl font-black text-white">04'</span>
+                            <span class="text-[8px] text-zinc-600 uppercase font-black">Elapsed</span>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-3 mb-1">
+                                <h4 class="text-xl font-black uppercase tracking-tight">#ORD-9045</h4>
+                                <span class="bg-zinc-800 text-zinc-500 text-[8px] font-black px-2 py-0.5 rounded uppercase tracking-widest">Regular</span>
+                            </div>
+                            <p class="text-xs text-zinc-500 font-medium mb-3">Customer: Sarah Chen • Pickup</p>
+                            <div class="space-y-1">
+                                <p class="text-sm font-bold text-zinc-200">1x Quinoa Buddha Bowl</p>
+                                <p class="text-sm font-bold text-zinc-200">1x Iced Matcha Latte</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-3">
+                        <button class="bg-zinc-800 text-white font-black px-8 py-3 rounded-xl text-xs hover:bg-zinc-700 transition-all">Mark Preparing</button>
+                        <button class="bg-zinc-950 text-zinc-600 font-bold px-8 py-3 rounded-xl text-xs border border-white/5 hover:text-white transition-colors">Print Ticket</button>
+                    </div>
+                </div>
+
+                <!-- Order Card: Ready -->
+                <div class="staff-card p-8 flex items-center justify-between ready-status bg-tertiary/5">
+                    <div class="flex items-center gap-8">
+                        <div class="w-16 h-16 rounded-2xl bg-tertiary/10 border border-tertiary/20 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-tertiary text-2xl">check_circle</span>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-3 mb-1">
+                                <h4 class="text-xl font-black uppercase tracking-tight text-white">#ORD-9040</h4>
+                                <span class="text-tertiary text-[10px] font-black uppercase tracking-widest">Ready</span>
+                            </div>
+                            <p class="text-xs text-zinc-500 font-medium mb-1">Customer: Mike Ross • Table 04</p>
+                            <p class="text-[10px] text-tertiary font-bold animate-pulse">Waiting for pickup for 03:12</p>
+                        </div>
+                    </div>
+                    <button class="bg-tertiary text-black font-black px-8 py-4 rounded-xl text-sm shadow-xl shadow-tertiary/10">Mark Completed</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Right Sidebar Section -->
+    <div class="w-80 space-y-8">
+        <!-- Kitchen Capacity -->
+        <section class="staff-card p-8">
+            <h4 class="font-bold mb-6 text-sm flex items-center justify-between">
+                Kitchen Capacity
+                <span class="material-symbols-outlined text-primary text-xs">analytics</span>
+            </h4>
+            <div class="space-y-6">
+                <div>
+                    <div class="flex justify-between text-xs mb-2">
+                        <span class="text-zinc-500">Grill Station</span>
+                        <span class="text-orange-500 font-bold">85%</span>
+                    </div>
+                    <div class="h-1.5 bg-zinc-900 rounded-full overflow-hidden">
+                        <div class="h-full bg-orange-500" style="width: 85%"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex justify-between text-xs mb-2">
+                        <span class="text-zinc-500">Prep Station</span>
+                        <span class="text-orange-400 font-bold">42%</span>
+                    </div>
+                    <div class="h-1.5 bg-zinc-900 rounded-full overflow-hidden">
+                        <div class="h-full bg-orange-400" style="width: 42%"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex justify-between text-xs mb-2">
+                        <span class="text-zinc-500">Beverage Bar</span>
+                        <span class="text-tertiary font-bold">15%</span>
+                    </div>
+                    <div class="h-1.5 bg-zinc-900 rounded-full overflow-hidden">
+                        <div class="h-full bg-tertiary" style="width: 15%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-10 p-4 bg-zinc-950 rounded-2xl flex items-center gap-4 border border-white/5">
+                <span class="material-symbols-outlined text-orange-500">timer</span>
+                <div>
+                    <p class="text-[10px] text-zinc-500 uppercase font-black">Avg. Prep Time</p>
+                    <p class="text-lg font-black text-white">14.5 Minutes</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Menu Alerts -->
+        <section class="staff-card p-8">
+            <div class="flex justify-between items-center mb-6">
+                <h4 class="font-bold text-sm">Menu Alerts</h4>
+                <button class="text-[10px] text-primary font-bold hover:underline">Manage</button>
+            </div>
+            <div class="space-y-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-xl bg-red-950/20 flex items-center justify-center text-red-500">
+                        <span class="material-symbols-outlined text-lg">block</span>
+                    </div>
+                    <div>
+                        <p class="font-bold text-sm text-zinc-200">Avocado Smash</p>
+                        <p class="text-[10px] text-zinc-600 font-bold uppercase">Out of Stock</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-xl bg-orange-950/20 flex items-center justify-center text-orange-500">
+                        <span class="material-symbols-outlined text-lg">priority_high</span>
+                    </div>
+                    <div>
+                        <p class="font-bold text-sm text-zinc-200">Gluten Free Buns</p>
+                        <p class="text-[10px] text-zinc-600 font-bold uppercase">Low Stock (2)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Revenue Target -->
+        <section class="staff-card p-8 flex flex-col items-center">
+            <div class="relative w-32 h-32 flex items-center justify-center mb-8 mt-4">
+                <svg class="w-full h-full transform -rotate-90">
+                    <circle class="text-zinc-900" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-width="8"></circle>
+                    <circle class="text-primary" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-dasharray="364" stroke-dashoffset="91" stroke-width="8" stroke-linecap="round"></circle>
+                </svg>
+                <div class="absolute text-center">
+                    <p class="text-2xl font-black">75%</p>
+                    <p class="text-[8px] text-zinc-500 uppercase font-bold tracking-widest">Daily Goal</p>
+                </div>
+            </div>
+            <p class="text-sm font-bold text-white mb-1">Shift Revenue Target</p>
+            <p class="text-[10px] text-zinc-500 font-bold">$2,450 / $3,200</p>
+        </section>
+    </div>
+</main>
+
+</body>
+</html>

@@ -105,6 +105,18 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
+        /* Page Transitions */
+        .page-transition-wrapper {
+            transition: opacity 0.35s ease-in, transform 0.35s ease-in;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .page-exit {
+            opacity: 0 !important;
+            transform: translateY(-16px) !important;
+            pointer-events: none;
+        }
+
         /* ===== LOADING BAR ===== */
         #loading-bar {
             position: fixed;
@@ -482,7 +494,378 @@
                 100% { transform: translateY(100%); }
             }
         }
+        /* ===== LOGIN PAGE SYSTEM ===== */
+        #login-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: #000000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        #login-page-container {
+            position: fixed;
+            inset: 0;
+            z-index: 9990;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            background: #0a0800;
+            overflow: hidden;
+            opacity: 0;
+            transition: opacity 0.4s ease-out;
+        }
+
+        /* Bokeh Background */
+        .login-bokeh-bg {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 70% 60% at 40% 55%, 
+                rgba(180, 90, 0, 0.35) 0%, 
+                rgba(80, 35, 0, 0.18) 40%, 
+                #000000 75%);
+            z-index: 1;
+        }
+
+        .login-bokeh-bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 70% 60% at 40% 55%, 
+                rgba(180, 90, 0, 0.45) 0%, 
+                rgba(80, 35, 0, 0.22) 40%, 
+                transparent 75%);
+            filter: blur(60px);
+            z-index: 0;
+        }
+
+        /* Glassmorphism Card */
+        #login-card {
+            position: relative;
+            z-index: 10;
+            width: 380px;
+            background: rgba(30, 22, 10, 0.82);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border: 1px solid rgba(255, 168, 79, 0.10);
+            border-radius: 24px;
+            padding: 40px 36px 36px;
+            box-shadow: 0 8px 80px rgba(0,0,0,0.6), 0 0 120px rgba(180,90,0,0.08);
+            will-change: transform, opacity;
+            transform: translateY(32px) scale(0.93);
+            opacity: 0;
+        }
+
+        .login-back-btn {
+            position: absolute;
+            top: -48px;
+            left: 0;
+            font-family: 'Manrope', sans-serif;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s ease;
+        }
+
+        .login-back-btn:hover {
+            color: #ffa84f;
+        }
+
+        /* App Icon */
+        .login-app-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #ffa84f, #fe9400);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            box-shadow: 0 8px 24px rgba(254, 148, 0, 0.35);
+        }
+
+        .login-app-icon .material-symbols-outlined {
+            font-size: 28px;
+            color: white;
+            font-variation-settings: 'FILL' 1;
+        }
+
+        /* Wordmark */
+        .login-wordmark {
+            margin-top: 14px;
+            text-align: center;
+        }
+
+        .login-brand {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 26px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -0.02em;
+        }
+
+        .login-brand span {
+            color: #ffa84f;
+        }
+
+        .login-subtitle {
+            font-family: 'Manrope', sans-serif;
+            font-size: 10px;
+            letter-spacing: 0.25em;
+            color: rgba(255, 255, 255, 0.35);
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        /* Form Fields */
+        .login-form {
+            margin-top: 32px;
+        }
+
+        .login-label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .login-label {
+            font-family: 'Manrope', sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            color: #ffa84f;
+            text-transform: uppercase;
+        }
+
+        .login-forgot {
+            font-family: 'Manrope', sans-serif;
+            font-size: 10px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.35);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .login-forgot:hover {
+            color: #ffa84f;
+        }
+
+        .login-input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .login-input {
+            width: 100%;
+            height: 52px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 12px;
+            padding: 0 16px 0 44px;
+            font-family: 'Manrope', sans-serif;
+            font-size: 14px;
+            color: white;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .login-input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .login-input:focus {
+            border-color: rgba(255, 168, 79, 0.45);
+            box-shadow: inset 0 0 0 1px rgba(255, 168, 79, 0.2);
+        }
+
+        .login-field-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.35);
+            font-size: 20px;
+            transition: color 0.2s ease;
+            pointer-events: none;
+        }
+
+        .login-input:focus + .login-field-icon {
+            color: rgba(255, 168, 79, 0.7);
+        }
+
+        .login-toggle-password {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.35);
+            font-size: 20px;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .login-toggle-password:hover {
+            color: white;
+        }
+
+        /* Primary Button */
+        .login-btn-primary {
+            width: 100%;
+            height: 52px;
+            margin-top: 24px;
+            border-radius: 9999px;
+            background: linear-gradient(135deg, #ffa84f 0%, #fe9400 100%);
+            color: white;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 700;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .login-btn-primary:hover {
+            box-shadow: 0 0 40px rgba(254, 148, 0, 0.4);
+            filter: brightness(1.05);
+        }
+
+        .login-btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        /* Divider */
+        .login-divider-container {
+            margin-top: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .login-hr {
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.08);
+            border: none;
+        }
+
+        .login-divider-text {
+            font-family: 'Manrope', sans-serif;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.25);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        /* Google Button */
+        .login-btn-google {
+            width: 100%;
+            height: 48px;
+            margin-top: 16px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: rgba(255, 255, 255, 0.8);
+            font-family: 'Manrope', sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .login-btn-google:hover {
+            background: rgba(255, 255, 255, 0.09);
+            border-color: rgba(255, 255, 255, 0.18);
+        }
+
+        /* Footer Link */
+        .login-footer {
+            margin-top: 24px;
+            text-align: center;
+            font-family: 'Manrope', sans-serif;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.35);
+        }
+
+        .login-footer-link {
+            font-weight: 700;
+            color: #ffa84f;
+            cursor: pointer;
+            margin-left: 4px;
+        }
+
+        .login-footer-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Errors & Animations */
+        .login-error-msg {
+            color: #ff7351;
+            font-family: 'Manrope', sans-serif;
+            font-size: 11px;
+            margin-top: -12px;
+            margin-bottom: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .login-google-note {
+            font-family: 'Manrope', sans-serif;
+            font-size: 11px;
+            color: rgba(255, 168, 79, 0.6);
+            margin-top: 8px;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            50% { transform: translateX(6px); }
+            75% { transform: translateX(-4px); }
+            87% { transform: translateX(4px); }
+        }
+
+        .shake {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        /* Staggered entry classes */
+        .login-item {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .login-item--visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 480px) {
+            #login-card {
+                width: calc(100% - 32px);
+                padding: 32px 24px 28px;
+            }
+        }
     </style>
+
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700;1,800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&amp;display=swap" rel="stylesheet"/></head>
 <body class="selection:bg-primary selection:text-on-primary">
 
@@ -492,7 +875,13 @@
 <!-- Scroll Progress Bar -->
 <div id="scroll-progress-bar"></div>
 
+
+
+<!-- Scroll Progress Bar -->
+<div id="scroll-progress-bar"></div>
+
 <!-- TopAppBar -->
+<div id="page-wrapper" class="page-transition-wrapper">
 <nav class="fixed top-0 w-full z-50 bg-neutral-900/60 backdrop-blur-xl flex justify-between items-center px-8 py-4 max-w-full shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
 <div class="flex items-center gap-2">
 <span class="material-symbols-outlined text-orange-500" data-icon="restaurant_menu">restaurant_menu</span>
@@ -500,11 +889,9 @@
 </div>
 <div class="hidden md:flex items-center gap-10">
 <a class="text-orange-400 font-bold font-['Plus_Jakarta_Sans'] tracking-tight hover:text-orange-300 transition-colors duration-300" href="#">Home</a>
-<a class="text-neutral-400 font-['Plus_Jakarta_Sans'] tracking-tight hover:text-orange-300 transition-colors duration-300" href="#">Menu</a>
-<a class="text-neutral-400 font-['Plus_Jakarta_Sans'] tracking-tight hover:text-orange-300 transition-colors duration-300" href="#">Nutrition</a>
-<a class="text-neutral-400 font-['Plus_Jakarta_Sans'] tracking-tight hover:text-orange-300 transition-colors duration-300" href="#">Sustainability</a>
+<a class="text-neutral-400 font-['Plus_Jakarta_Sans'] tracking-tight hover:text-orange-300 transition-colors duration-300" href="about.html">About Us</a>
 </div>
-<button class="kinetic-gradient text-on-primary px-8 py-2.5 rounded-full font-bold tracking-tight scale-95 active:scale-90 transition-all duration-200 ease-in-out shadow-lg shadow-primary/20">Login Now</button>
+<button onclick="navigateToLogin()" class="kinetic-gradient text-on-primary px-8 py-2.5 rounded-full font-bold tracking-tight scale-95 active:scale-90 transition-all duration-200 ease-in-out shadow-lg shadow-primary/20">Login Now</button>
 </nav>
 
 <main>
@@ -550,7 +937,7 @@
                 <h1 class="stagger-item" data-delay="300" style="font-family: 'Playfair Display', serif; font-style: italic; font-weight: 800; font-size: clamp(3rem, 7vw, 6rem); line-height: 0.92; letter-spacing: -0.03em; margin-bottom: 1.5rem;"><span class="gradient-text-clip">Eat Smart.</span></h1>
                 <p class="stagger-item" data-delay="450" style="font-family: 'Manrope', sans-serif; color: #adaaaa; max-width: 380px; line-height: 1.7; font-size: 15px; margin-bottom: 2rem;">Order your food online and avoid long canteen queues. Experience high-precision nutrition tailored for your kinetic lifestyle.</p>
                 <div class="stagger-item" data-delay="600" style="display: flex; flex-wrap: wrap; gap: 1rem;">
-                    <button class="hero-btn-primary">Login Now</button>
+                    <button onclick="navigateToLogin()" class="hero-btn-primary">Login Now</button>
                     <button class="hero-btn-secondary">Explore Menu</button>
                 </div>
             </div>
@@ -646,7 +1033,65 @@
         </div>
     </div>
 </section>
-<!-- Meet the Developers -->
+
+<!-- Call to Action Section (Refined & Blended) -->
+<section class="relative py-52 overflow-hidden bg-black border-y border-white/5">
+    <!-- Subtle Chromatic Aura -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[600px] pointer-events-none opacity-20">
+        <div class="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,#ffa84f_0%,transparent_70%)] blur-[100px] animate-[pulse_10s_infinite_alternate]"></div>
+    </div>
+    
+    <div class="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
+        <!-- Floating Elements (Softened) -->
+        <div class="absolute top-24 left-[12%] glass-panel px-6 py-4 rounded-2xl border border-white/5 rotate-[-12deg] flex items-center gap-3 animate-[float_6s_ease-in-out_infinite] opacity-60">
+            <span class="material-symbols-outlined text-primary/60 text-lg">qr_code_2</span>
+            <span class="text-[10px] font-black uppercase tracking-widest text-zinc-500">Instant Tokens</span>
+        </div>
+        
+        <div class="absolute bottom-24 left-[18%] glass-panel px-6 py-4 rounded-2xl border border-white/5 rotate-[8deg] flex items-center gap-3 animate-[float_8s_ease-in-out_infinite_1s] opacity-60">
+            <span class="material-symbols-outlined text-tertiary/60 text-lg">bolt</span>
+            <span class="text-[10px] font-black uppercase tracking-widest text-zinc-500">Zero Wait</span>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-8 relative z-10 text-center">
+        <h2 class="text-6xl md:text-8xl font-black font-headline tracking-tighter text-white mb-8 leading-[0.9] uppercase">
+            Step Into the <br/>
+            <span class="text-transparent bg-clip-text kinetic-gradient">Sync.</span>
+        </h2>
+        
+        <p class="max-w-xl mx-auto text-on-surface-variant text-lg font-medium mb-12 leading-relaxed opacity-70 italic">
+            "Taste the intersection of digital efficiency and culinary warmth."
+        </p>
+
+        <div class="flex flex-col items-center justify-center relative">
+            <!-- Kinetic Chef Mascot (Balanced Integration) -->
+            <div class="absolute -right-24 lg:-right-40 -top-28 w-64 h-64 md:w-96 md:h-96 pointer-events-none animate-[float_7s_ease-in-out_infinite] mix-blend-screen opacity-80 scale-x-[-1]" style="mask-image: radial-gradient(circle, black 40%, transparent 70%); -webkit-mask-image: radial-gradient(circle, black 40%, transparent 70%);">
+                <img src="chef_outline.png" alt="Kinetic Chef" class="w-full h-full object-contain filter contrast-[1.1] brightness-125 drop-shadow-[0_0_20px_rgba(255,168,79,0.4)]">
+            </div>
+
+            <a href="login/index.html" class="group relative inline-flex items-center gap-6 px-14 py-6 kinetic-gradient rounded-full text-black font-black text-xs uppercase tracking-[0.3em] shadow-[0_0_40px_rgba(255,168,79,0.1)] hover:shadow-[0_0_60px_rgba(255,168,79,0.3)] hover:scale-105 active:scale-95 transition-all duration-500">
+                Enter Portal
+                <span class="material-symbols-outlined group-hover:translate-x-3 transition-transform text-2xl">arrow_right_alt</span>
+            </a>
+        </div>
+    </div>
+</section>
+</section>
+
+<style>
+    @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(var(--tw-rotate, -12deg)); }
+        50% { transform: translateY(-20px) rotate(var(--tw-rotate, -12deg)); }
+    }
+    @keyframes shimmer {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 100% 50%; }
+    }
+</style>
+
+
+
 <section class="px-8 py-32 bg-surface-container-lowest">
 <div class="max-w-7xl mx-auto">
 <div class="flex justify-between items-end mb-16">
@@ -769,10 +1214,11 @@
 
     // ===== CONFIG =====
     const TOTAL_FRAMES = 240;
-    const FRAME_PATH = '../noodles animation/ezgif-frame-';
+    const FRAME_PATH = './assets/hero-animation/ezgif-frame-';
     const FRAME_EXT = '.jpg';
 
     // ===== DOM REFS =====
+
     const canvas = document.getElementById('hero-canvas');
     const ctx = canvas.getContext('2d');
     const wrapper = document.getElementById('scroll-hero-wrapper');
@@ -1148,7 +1594,17 @@
     // Initial draw
     if (allLoaded) drawFrame(0);
 
+    // Page Transition
+    window.navigateToLogin = function() {
+        const wrapper = document.getElementById('page-wrapper');
+        wrapper.classList.add('page-exit');
+        setTimeout(() => {
+            window.location.href = './login/index.html';
+        }, 350);
+    }
+
 })();
 </script>
+</div>
 
 </body></html>
