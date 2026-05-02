@@ -145,6 +145,8 @@
         </div>
     </section>
 
+    <div id="order-info" class="fixed bottom-6 right-6 bg-black text-white p-4 rounded-xl shadow-lg hidden"></div>
+
     <!-- Cart Sidebar -->
     <aside class="w-96 bg-zinc-950 border-l border-white/5 hidden xl:flex flex-col p-8 h-full">
         <h3 class="text-xl font-bold font-headline mb-8">Current Tray</h3>
@@ -167,18 +169,8 @@
 </main>
 
 <script>
-    const menuData = [
-        { id: 1, name: "Sausage and Bacon", price: 350, cat: "Breakfast", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuB1_mB-B03-8d2673_095908_02_2024_02_20/sausage-bacon.jpg" },
-        { id: 2, name: "Kinetic Noodles", price: 120, cat: "Lunch", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuB1_mB-B03-8d2673_095908_02_2024_02_20/noodles.jpg" },
-        { id: 3, name: "Alu Paratha", price: 180, cat: "Breakfast", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuB1_mB-B03-8d2673_095908_02_2024_02_20/paratha.jpg" },
-        { id: 4, name: "Chicken Roll", price: 120, cat: "Snacks", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuB1_mB-B03-8d2673_095908_02_2024_02_20/chicken-roll.jpg" },
-        { id: 5, name: "Boil Egg", price: 25, cat: "Breakfast", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuB1_mB-B03-8d2673_095908_02_2024_02_20/egg.jpg" },
-        { id: 6, name: "Veg Momos", price: 120, cat: "Snacks", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuB1_mB-B03-8d2673_095908_02_2024_02_20/momos.jpg" },
-        { id: 7, name: "Mutton Biryani", price: 450, cat: "Lunch", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuB1_mB-B03-8d2673_095908_02_2024_02_20/biryani.jpg" },
-        { id: 8, name: "Burger and Fries", price: 150, cat: "Lunch", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuB1_mB-B03-8d2673_095908_02_2024_02_20/burger.jpg" },
-        { id: 9, name: "Classic Coke", price: 60, cat: "Drinks", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuB1_mB-B03-8d2673_095908_02_2024_02_20/coke.jpg" },
-        { id: 10, name: "Milk Coffee", price: 80, cat: "Drinks", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuB1_mB-B03-8d2673_095908_02_2024_02_20/coffee.jpg" }
-    ];
+    
+    let menuData = [];
 
     let cart = [];
     let currentQuery = '';
@@ -258,8 +250,52 @@
     }
 
     function handleSearch(q) { currentQuery = q; renderMenu(); }
-    function placeOrder() { if(cart.length > 0) { alert('Order Sent!'); cart=[]; renderMenu(); renderCart(); } }
+
+    async function loadMenu() {
+    const res = await fetch('http://127.0.0.1:5000/menu');
+    const data = await res.json();
+
+    menuData = data;
     renderMenu();
+}
+
+    async function placeOrder() 
+    {
+        if (cart.length === 0) return;
+
+        const res = await fetch('http://127.0.0.1:5000/order', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      item: cart.map(i => `${i.name} x${i.qty}`).join(", "),
+      quantity: cart.length
+    })
+  });
+
+  const data = await res.json();
+
+  const infoBox = document.getElementById('order-info');
+
+  infoBox.innerHTML = `
+      <div class="font-bold">Order Confirmed ✅</div>
+      <div>Token: ${data.token}</div>
+      <div>ETA: ${data.estimated_time} min</div>
+  `;
+
+  infoBox.classList.remove('hidden');
+
+  setTimeout(() => {
+      infoBox.classList.add('hidden');
+  }, 5000);
+
+  cart = [];
+  renderMenu();
+  renderCart();
+}
+
+    loadMenu();
 </script>
 
 </body>
