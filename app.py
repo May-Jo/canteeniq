@@ -52,8 +52,7 @@ def get_menu():
 @app.route('/order', methods=['POST'])
 def place_order():
     data = request.json
-    item = data['item']
-    quantity = data['quantity']
+    items = data['items']
 
     token = get_next_token()
     queue_length = get_queue_length()
@@ -62,9 +61,10 @@ def place_order():
     eta = queue_length * 5  
 
     cur = conn.cursor()
-    cur.execute(
-        "INSERT INTO orders (token, item, quantity, status) VALUES (%s, %s, %s, %s)",
-        (token, item, quantity, 'Pending')
+    for i in items:
+        cur.execute(
+            "INSERT INTO orders (token, item, quantity, status) VALUES (%s, %s, %s, %s)",
+            (token, i['name'], i['qty'], 'Pending')
     )
 
     return jsonify({

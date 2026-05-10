@@ -269,8 +269,7 @@
                 'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      item: cart.map(i => `${i.name} x${i.qty}`).join(", "),
-      quantity: cart.length
+        items: cart
     })
   });
 

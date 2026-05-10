@@ -331,12 +331,21 @@
 
 <script>
 
+let lastData = [];
+let openToken = null;
+
 async function loadOrders() {
     const res = await fetch('http://127.0.0.1:5000/orders', {
         cache: "no-store"
     });
 
     const data = await res.json();
+
+    if (JSON.stringify(data) === JSON.stringify(lastData)) {
+        return;
+    }
+
+    lastData = data;
 
     const container = document.getElementById('orders-container');
     container.innerHTML = '';
@@ -348,7 +357,7 @@ async function loadOrders() {
         grouped[token].push({ item, qty });
     });
 
-    Object.keys(grouped).forEach(token => {
+    for (const token of Object.keys(grouped)) {
         const items = grouped[token];
 
         const itemsHTML = items.map(i =>
@@ -360,7 +369,7 @@ async function loadOrders() {
 
         div.innerHTML = `
 
-            <div class="flex justify-between items-center w-full"
+            <div class="flex justify-between items-center w-full">
 
                 <div>
                     <h4 class="font-bold">Token #${token}</h4>
@@ -368,23 +377,35 @@ async function loadOrders() {
                     <div id="details-${token}" class="hidden mt-2 text-sm text-zinc-300"></div>
                 </div>    
                 
-                <div class="flex gap-2">
-                    <button onclick="viewDetails(${token})"
-                        class="bg-zinc-800 text-white px-3 py-1 rounded text-xs">
+                <div class="flex flex-col gap-2 w-32">
+                    <button onclick="toggleDetails(${token})"
+                        class="bg-zinc-800 text-white px-4 py-2 rounded text-sm w-full">
                         View Details
                     </button>
 
                     <button onclick="markReady(${token})"
-                        class="bg-orange-500 text-black px-3 py-1 rounded text-xs">
+                        class="bg-orange-500 text-black px-4 py-2 rounded text-sm w-full">
                         Mark Ready
                     </button>
                 </div>
-            </div
+            </div>
 
         `;
 
         container.appendChild(div);
-    });
+
+        const detailsDiv = document.getElementById(`details-${token}`);
+
+        if (String(token) === String(openToken)) {
+            if (detailsDiv.innerHTML === "") {
+                await viewDetails(token);
+            }
+        detailsDiv.classList.remove("hidden");
+        } else {
+            detailsDiv.classList.add("hidden");
+        }
+
+    }
 }
 
 // run it
@@ -439,7 +460,23 @@ async function viewDetails(token) {
     console.log("DIV:", div);
     div.innerHTML = html;
 
-    div.classList.toggle("hidden");
+}
+
+async function toggleDetails(token) {
+    const div = document.getElementById(`details-${token}`);
+
+    if (openToken === token) {
+        openToken = null;
+        div.classList.add("hidden");
+        return;
+    }
+
+    openToken = token;
+
+    // 🔥 load data when opening
+    await viewDetails(token);
+
+    div.classList.remove("hidden");
 }
 
 </script>
