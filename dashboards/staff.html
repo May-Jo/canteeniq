@@ -165,7 +165,7 @@
                 </div>
             </div>
 
-            <div class="space-y-6">
+            <div id="orders-container" class="space-y-6">
                 <!-- Order Card: Priority -->
                 <div class="staff-card p-8 flex items-center justify-between border-primary/10">
                     <div class="flex items-center gap-8">
@@ -328,6 +328,121 @@
         </section>
     </div>
 </main>
+
+<script>
+
+async function loadOrders() {
+    const res = await fetch('http://127.0.0.1:5000/orders', {
+        cache: "no-store"
+    });
+
+    const data = await res.json();
+
+    const container = document.getElementById('orders-container');
+    container.innerHTML = '';
+
+    const grouped = {};
+
+    data.forEach(([token, item, qty]) => {
+        if (!grouped[token]) grouped[token] = [];
+        grouped[token].push({ item, qty });
+    });
+
+    Object.keys(grouped).forEach(token => {
+        const items = grouped[token];
+
+        const itemsHTML = items.map(i =>
+            `<p>${i.item} (${i.qty})</p>`
+        ).join('');
+
+        const div = document.createElement('div');
+        div.className = "bg-zinc-900 p-4 rounded-xl";
+
+        div.innerHTML = `
+
+            <div class="flex justify-between items-center w-full"
+
+                <div>
+                    <h4 class="font-bold">Token #${token}</h4>
+                    
+                    <div id="details-${token}" class="hidden mt-2 text-sm text-zinc-300"></div>
+                </div>    
+                
+                <div class="flex gap-2">
+                    <button onclick="viewDetails(${token})"
+                        class="bg-zinc-800 text-white px-3 py-1 rounded text-xs">
+                        View Details
+                    </button>
+
+                    <button onclick="markReady(${token})"
+                        class="bg-orange-500 text-black px-3 py-1 rounded text-xs">
+                        Mark Ready
+                    </button>
+                </div>
+            </div
+
+        `;
+
+        container.appendChild(div);
+    });
+}
+
+// run it
+loadOrders();
+setInterval(loadOrders, 3000);
+
+async function markReady(token) {
+    await fetch('http://127.0.0.1:5000/mark-ready', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token })
+    });
+
+    loadOrders(); // refresh UI
+}
+
+async function viewDetails(token) {
+    const res = await fetch('http://127.0.0.1:5000/orders', {
+        cache: "no-store"
+    });
+
+    const orders = await res.json();
+    console.log("Orders:", orders); 
+
+    // filter orders for this token
+    const filtered = orders.filter(o => String(o[0]) === String(token));
+
+    let html = `
+        <table class="w-full text-sm border border-zinc-700">
+            <thead>
+                <tr class="bg-zinc-800">
+                    <th class="p-2">Item</th>
+                    <th class="p-2">Qty</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    filtered.forEach(o => {
+        html += `
+            <tr class="border-t border-zinc-700">
+                <td class="p-2">${o[1]}</td>
+                <td class="p-2">${o[2]}</td>
+            </tr>
+        `;
+    });
+
+    html += `</tbody></table>`;
+
+    console.log("Looking for:", `details-${String(token)}`);
+    const div = document.getElementById(`details-${String(token)}`);
+    console.log("DIV:", div);
+    div.innerHTML = html;
+
+    div.classList.toggle("hidden");
+}
+
+</script>
 
 </body>
 </html>
