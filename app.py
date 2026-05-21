@@ -1,9 +1,11 @@
 from flask import Flask, request, jsonify
 import psycopg2
+import razorpay
 import os
 from dotenv import load_dotenv
 from flask_cors import CORS
 
+razorpay_client = razorpay.Client(auth=("rzp_test_SrjFmvQiZIpSpH", "diXYLP4lpSlQQTuGayK0i2x4"))
 
 load_dotenv()
 
@@ -71,6 +73,41 @@ def place_order():
         "token": token,
         "queue_length": queue_length,
         "estimated_time": eta
+    })
+
+@app.route('/create-order', methods=['POST'])
+def create_order():
+    data = request.json
+    cart = data['cart']
+
+    total = sum(item['price'] * item['qty'] for item in cart)
+
+    order = razorpay_client.order.create({
+        "amount": int(total * 100),
+        "currency": "INR"
+    })
+
+    return jsonify({
+        "amount": int(total * 100),
+        "razorpay_order_id": order['id']
+    })
+
+@app.route('/verify-payment', methods=['POST'])
+def verify_payment():
+    data = request.json
+    cart = data['cart']
+
+    token = get_next_token()
+
+    for item in cart:
+        cur = conn.cursor()
+        cur.execute(
+            "INSERT INTO orders (token, item, quantity, status) VALUES (%s, %s, %s, %s)",
+            (token, item['name'], item['qty'], 'Pending')
+        )
+
+    return jsonify({
+        "token": token
     })
 
 

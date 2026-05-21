@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html class="dark" lang="en">
 <head>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>CanteenIQ | The Kinetic Menu</title>
@@ -163,7 +164,7 @@
                 <span>Total</span>
                 <span id="total">Rs. 0.00</span>
             </div>
-            <button onclick="placeOrder()" class="w-full py-4 kinetic-gradient text-black font-black rounded-2xl text-xs uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all mt-4">Place Order</button>
+            <button onclick="startPayment()" class="w-full py-4 kinetic-gradient text-black font-black rounded-2xl text-xs uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all mt-4">Pay Now</button>
         </div>
     </aside>
 </main>
@@ -259,41 +260,82 @@
     renderMenu();
 }
 
-    async function placeOrder() 
-    {
-        if (cart.length === 0) return;
+async function startPayment() {
+    if (cart.length === 0) return;
 
-        const res = await fetch('http://127.0.0.1:5000/order', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-        items: cart
-    })
-  });
+    const res = await fetch('http://127.0.0.1:5000/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cart })
+    });
 
-  const data = await res.json();
+    const data = await res.json();
 
-  const infoBox = document.getElementById('order-info');
+    openPaymentGateway(data);
+}   
 
-  infoBox.innerHTML = `
-      <div class="font-bold">Order Confirmed ✅</div>
-      <div>Token: ${data.token}</div>
-      <div>ETA: ${data.estimated_time} min</div>
-  `;
+async function verifyPayment(paymentData) {
+    const res = await fetch('http://127.0.0.1:5000/verify-payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            ...paymentData,
+            cart: cart
+        })
+    });
 
-  infoBox.classList.remove('hidden');
+    const data = await res.json();
 
-  setTimeout(() => {
-      infoBox.classList.add('hidden');
-  }, 5000);
+    const infoBox = document.getElementById('order-info');
 
-  cart = [];
-  renderMenu();
-  renderCart();
+    infoBox.innerHTML = `
+        <div class="font-bold">Payment Successful ✅</div>
+        <div>Token: ${data.token}</div>
+    `;
+
+    infoBox.classList.remove('hidden');
+
+    setTimeout(() => {
+        infoBox.classList.add('hidden');
+    }, 5000);
+
+    cart = [];
+    renderMenu();
+    renderCart();
 }
 
+function openPaymentGateway(orderData) {
+    const options = {
+        key: "rzp_test_SrjFmvQiZIpSpH",
+        amount: orderData.amount,
+        currency: "INR",
+        name: "Smart Canteen",
+        description: "Food Order",
+        order_id: orderData.razorpay_order_id,
+        prefill: {
+        contact: "9876543210",
+        email: "test@test.com"
+        },
+
+        theme: {
+            color: "#3399cc"
+        },
+
+        modal: {
+            escape: false
+        },
+    
+        handler: async function (response) {
+            await verifyPayment(response);
+        }
+    };
+
+    const rzp = new Razorpay(options);
+    rzp.open();
+}
+
+
+    
     loadMenu();
 </script>
 
