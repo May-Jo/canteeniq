@@ -5,7 +5,7 @@ import os
 from dotenv import load_dotenv
 from flask_cors import CORS
 
-razorpay_client = razorpay.Client(auth=("rzp_test_SrjFmvQiZIpSpH", "diXYLP4lpSlQQTuGayK0i2x4"))
+razorpay_client = razorpay.Client(auth=("rzp_test_Ss0NUzhn05UPcG", "GETSorkQI6gVee60PwieW91S"))
 
 load_dotenv()
 
@@ -105,9 +105,12 @@ def verify_payment():
             "INSERT INTO orders (token, item, quantity, status) VALUES (%s, %s, %s, %s)",
             (token, item['name'], item['qty'], 'Pending')
         )
+    queue_length = get_queue_length()
+    eta = queue_length * 5
 
     return jsonify({
-        "token": token
+        "token": token,
+        "estimated_time": eta
     })
 
 

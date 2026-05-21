@@ -306,25 +306,12 @@ async function verifyPayment(paymentData) {
 
 function openPaymentGateway(orderData) {
     const options = {
-        key: "rzp_test_SrjFmvQiZIpSpH",
+        key: "rzp_test_Ss0NUzhn05UPcG",
         amount: orderData.amount,
         currency: "INR",
         name: "Smart Canteen",
         description: "Food Order",
-        order_id: orderData.razorpay_order_id,
-        prefill: {
-        contact: "9876543210",
-        email: "test@test.com"
-        },
-
-        theme: {
-            color: "#3399cc"
-        },
-
-        modal: {
-            escape: false
-        },
-    
+        order_id: orderData.razorpay_order_id,   
         handler: async function (response) {
             await verifyPayment(response);
         }
