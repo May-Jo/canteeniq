@@ -4,6 +4,7 @@ import razorpay
 import os
 from dotenv import load_dotenv
 from flask_cors import CORS
+import requests
 
 razorpay_client = razorpay.Client(auth=("rzp_test_Ss0NUzhn05UPcG", "GETSorkQI6gVee60PwieW91S"))
 
@@ -114,18 +115,35 @@ def verify_payment():
     })
 
 
-# 🔴 Mark Order Ready
 @app.route('/mark-ready', methods=['POST'])
 def mark_ready():
+
     token = request.json['token']
 
     cur = conn.cursor()
+
     cur.execute(
         "UPDATE orders SET status='Ready' WHERE token=%s",
         (token,)
     )
 
-    return jsonify({"message": "Order marked as Ready"})
+    conn.commit()
+
+    try:
+        requests.get(
+            f"http://192.168.1.20/ready?token={token}",
+            timeout=3
+        )
+
+        print(f"Sent token {token} to NodeMCU")
+
+    except Exception as e:
+        print("NodeMCU Error:", e)
+
+    return jsonify({
+        "success": True,
+        "message": "Order marked as Ready"
+    })
 
 
 # 🔌 Get Ready Tokens (for hardware)
