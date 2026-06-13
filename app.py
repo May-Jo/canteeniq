@@ -97,14 +97,27 @@ def create_order():
 def verify_payment():
     data = request.json
     cart = data['cart']
+    email = data['email']
+    phone = data['phone']
 
     token = get_next_token()
 
     for item in cart:
         cur = conn.cursor()
         cur.execute(
-            "INSERT INTO orders (token, item, quantity, status) VALUES (%s, %s, %s, %s)",
-            (token, item['name'], item['qty'], 'Pending')
+            """
+            INSERT INTO orders
+            (token, item, quantity, status, phone, email)
+            VALUES (%s, %s, %s, %s, %s, %s)
+            """,
+            (
+                token,
+                item['name'],
+                item['qty'],
+                'Pending',
+                phone,
+                email
+            )
         )
     queue_length = get_queue_length()
     eta = queue_length * 5

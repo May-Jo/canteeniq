@@ -406,6 +406,24 @@
                 <div id="id-error" class="error-label">ID is required</div>
             </div>
 
+            <!-- Phone Number Field -->
+            <div class="label-row pt-2">
+                <label class="input-label">PHONE NUMBER</label>
+            </div>
+
+            <div class="input-group">
+                <input
+                    type="tel"
+                    id="phone-number"
+                    class="custom-input"
+                    placeholder="+91 9876543210"
+                    maxlength="10"
+                    oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+/>
+                <span class="material-symbols-outlined field-icon">call</span>
+                <div id="phone-error" class="error-label">Phone number is required</div>
+            </div>
+
             <!-- Password Field -->
             <div class="label-row pt-2">
                 <label class="input-label">PASSWORD</label>
@@ -476,6 +494,10 @@
             
             const idVal = idField.value.trim().toLowerCase();
             const passVal = passField.value.trim();
+
+            const phoneField = document.getElementById('phone-number');
+            const phoneError = document.getElementById('phone-error');
+            const phoneVal = phoneField.value.trim();
             
             let valid = true;
 
@@ -498,7 +520,39 @@
                 clearError(passField, passError);
             }
 
+            // Phone number validation
+            const phoneRegex = /^[6-9]\d{9}$/;
+
+            if (!phoneVal) {
+            triggerError(phoneField, phoneError, "Phone number is required");
+            valid = false;
+            }
+            else if (!phoneRegex.test(phoneVal)) {
+                triggerError(phoneField, phoneError, "Enter a valid 10-digit phone number");
+                valid = false;
+            }
+            else {
+                clearError(phoneField, phoneError);
+            }
+
+
+
             if (valid) {
+
+                fetch("http://127.0.0.1:5000/save-user", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        email: idVal,
+                        phone: phoneVal
+                    })
+                });
+
+                localStorage.setItem("email", idVal);
+                localStorage.setItem("phone", phoneVal);
+
                 // Role Detection
                 let role = "student";
                 if (idVal.startsWith('adm') || idVal.startsWith('admin')) {

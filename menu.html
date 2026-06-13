@@ -279,6 +279,8 @@ async function verifyPayment(paymentData) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
             ...paymentData,
+            email: localStorage.getItem("email"),
+            phone: localStorage.getItem("phone"),
             cart: cart
         })
     });
