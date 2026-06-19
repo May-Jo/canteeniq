@@ -165,7 +165,7 @@
                 </div>
             </div>
 
-            <div class="space-y-6">
+            <div id="orders-container" class="space-y-6">
                 <!-- Order Card: Priority -->
                 <div class="staff-card p-8 flex items-center justify-between border-primary/10">
                     <div class="flex items-center gap-8">
@@ -328,6 +328,158 @@
         </section>
     </div>
 </main>
+
+<script>
+
+let lastData = [];
+let openToken = null;
+
+async function loadOrders() {
+    const res = await fetch('http://127.0.0.1:5000/orders', {
+        cache: "no-store"
+    });
+
+    const data = await res.json();
+
+    if (JSON.stringify(data) === JSON.stringify(lastData)) {
+        return;
+    }
+
+    lastData = data;
+
+    const container = document.getElementById('orders-container');
+    container.innerHTML = '';
+
+    const grouped = {};
+
+    data.forEach(([token, item, qty]) => {
+        if (!grouped[token]) grouped[token] = [];
+        grouped[token].push({ item, qty });
+    });
+
+    for (const token of Object.keys(grouped)) {
+        const items = grouped[token];
+
+        const itemsHTML = items.map(i =>
+            `<p>${i.item} (${i.qty})</p>`
+        ).join('');
+
+        const div = document.createElement('div');
+        div.className = "bg-zinc-900 p-4 rounded-xl";
+
+        div.innerHTML = `
+
+            <div class="flex justify-between items-center w-full">
+
+                <div>
+                    <h4 class="font-bold">Token #${token}</h4>
+                    
+                    <div id="details-${token}" class="hidden mt-2 text-sm text-zinc-300"></div>
+                </div>    
+                
+                <div class="flex flex-col gap-2 w-32">
+                    <button onclick="toggleDetails(${token})"
+                        class="bg-zinc-800 text-white px-4 py-2 rounded text-sm w-full">
+                        View Details
+                    </button>
+
+                    <button onclick="markReady(${token})"
+                        class="bg-orange-500 text-black px-4 py-2 rounded text-sm w-full">
+                        Mark Ready
+                    </button>
+                </div>
+            </div>
+
+        `;
+
+        container.appendChild(div);
+
+        const detailsDiv = document.getElementById(`details-${token}`);
+
+        if (String(token) === String(openToken)) {
+            if (detailsDiv.innerHTML === "") {
+                await viewDetails(token);
+            }
+        detailsDiv.classList.remove("hidden");
+        } else {
+            detailsDiv.classList.add("hidden");
+        }
+
+    }
+}
+
+// run it
+loadOrders();
+setInterval(loadOrders, 3000);
+
+async function markReady(token) {
+    await fetch('http://127.0.0.1:5000/mark-ready', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token })
+    });
+
+    loadOrders(); // refresh UI
+}
+
+async function viewDetails(token) {
+    const res = await fetch('http://127.0.0.1:5000/orders', {
+        cache: "no-store"
+    });
+
+    const orders = await res.json();
+    console.log("Orders:", orders); 
+
+    // filter orders for this token
+    const filtered = orders.filter(o => String(o[0]) === String(token));
+
+    let html = `
+        <table class="w-full text-sm border border-zinc-700">
+            <thead>
+                <tr class="bg-zinc-800">
+                    <th class="p-2">Item</th>
+                    <th class="p-2">Qty</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    filtered.forEach(o => {
+        html += `
+            <tr class="border-t border-zinc-700">
+                <td class="p-2">${o[1]}</td>
+                <td class="p-2">${o[2]}</td>
+            </tr>
+        `;
+    });
+
+    html += `</tbody></table>`;
+
+    console.log("Looking for:", `details-${String(token)}`);
+    const div = document.getElementById(`details-${String(token)}`);
+    console.log("DIV:", div);
+    div.innerHTML = html;
+
+}
+
+async function toggleDetails(token) {
+    const div = document.getElementById(`details-${token}`);
+
+    if (openToken === token) {
+        openToken = null;
+        div.classList.add("hidden");
+        return;
+    }
+
+    openToken = token;
+
+    // 🔥 load data when opening
+    await viewDetails(token);
+
+    div.classList.remove("hidden");
+}
+
+</script>
 
 </body>
 </html>
