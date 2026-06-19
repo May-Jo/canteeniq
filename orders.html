@@ -65,7 +65,7 @@
 </head>
 <body class="overflow-hidden">
 
-<!-- TopNavBar (Consistent with Dashboard) -->
+TopNavBar (Consistent with Dashboard)
 <header class="fixed top-0 w-full z-50 bg-neutral-900/60 backdrop-blur-xl border-b border-white/5">
     <div class="flex justify-between items-center px-6 py-4 w-full max-w-screen-2xl mx-auto">
         <div class="flex items-center gap-8">
@@ -89,7 +89,7 @@
     </div>
 </header>
 
-<!-- SideNavBar (Consistent with Dashboard) -->
+SideNavBar (Consistent with Dashboard)
 <aside class="h-screen w-64 fixed left-0 top-0 z-40 bg-neutral-950/80 backdrop-blur-2xl border-r border-neutral-800/20 shadow-2xl hidden md:flex flex-col py-8 gap-2">
     <div class="px-6 mb-10 pt-20">
         <h2 class="text-lg font-bold text-neutral-100">The Hearth</h2>
@@ -124,8 +124,10 @@
             </div>
         </div>
 
+        <div id="orders-container"></div>
+
         <!-- Live Orders Section -->
-        <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-8 ml-1">Live Tracking</h3>
+        <!-- <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-8 ml-1">Live Tracking</h3>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
             <div class="glass-panel p-8 rounded-[2rem] border border-white/5 relative overflow-hidden group">
                 <div class="flex justify-between items-start mb-10">
@@ -139,7 +141,7 @@
                     <div class="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary border border-primary/20">
                         <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">cooking</span>
                     </div>
-                </div>
+                <!-- </div>
                 <div class="space-y-4 mb-4">
                     <div class="flex justify-between items-center text-sm">
                         <span class="text-neutral-400">Tonkotsu Hearth Ramen</span>
@@ -150,9 +152,9 @@
                     <span class="text-[10px] text-zinc-600 font-bold uppercase tracking-widest">Total Price</span>
                     <span class="text-xl font-headline font-black text-primary">Rs. 350.00</span>
                 </div>
-            </div>
+            </div> -->
 
-            <div class="glass-panel p-8 rounded-[2rem] border-tertiary/20 bg-tertiary/5 relative overflow-hidden group">
+            <!-- <div class="glass-panel p-8 rounded-[2rem] border-tertiary/20 bg-tertiary/5 relative overflow-hidden group">
                 <div class="flex justify-between items-start mb-10">
                     <div>
                         <div class="flex items-center gap-4 mb-2">
@@ -168,57 +170,131 @@
                 <p class="text-neutral-500 text-sm italic mb-8 leading-relaxed">Your order has been expertly prepared and is waiting at the hearth.</p>
                 <button class="w-full py-4 bg-tertiary text-black font-black rounded-2xl text-xs uppercase tracking-widest shadow-lg shadow-tertiary/20 hover:scale-[1.02] active:scale-95 transition-all">Show Digital Token</button>
             </div>
-        </div>
+        </div> -->
 
-        <!-- Previous Orders -->
-        <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600 mb-8 ml-1">Past Banquet Archives</h3>
-        <div class="space-y-4">
-            <div class="glass-panel p-6 rounded-[1.5rem] flex items-center justify-between border border-transparent hover:border-white/5 hover:bg-white/5 transition-all cursor-pointer">
-                <div class="flex items-center gap-6">
-                    <div class="w-14 h-14 rounded-2xl bg-zinc-900 flex items-center justify-center border border-white/5">
-                        <span class="material-symbols-outlined text-zinc-500 text-3xl">restaurant</span>
-                    </div>
-                    <div>
-                        <h5 class="text-white font-bold text-lg tracking-tight">#ORD-9152</h5>
-                        <p class="text-[10px] text-zinc-600 font-bold uppercase tracking-widest mt-1">Yesterday • 01:20 PM</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-16">
-                    <div class="text-right">
-                        <p class="text-xs text-zinc-600 font-bold uppercase mb-1">Total</p>
-                        <p class="text-lg font-headline font-black text-white">Rs. 240.00</p>
-                    </div>
-                    <div class="flex items-center gap-6">
-                        <span class="status-pill completed">Completed</span>
-                        <span class="material-symbols-outlined text-zinc-800 hover:text-primary transition-colors">chevron_right</span>
-                    </div>
-                </div>
+        
+<!-- Previous Orders -->
+<!-- <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600 mb-8 ml-1">Past Banquet Archives</h3>
+<div class="space-y-4">
+    <div class="glass-panel p-6 rounded-[1.5rem] flex items-center justify-between border border-transparent hover:border-white/5 hover:bg-white/5 transition-all cursor-pointer">
+        <div class="flex items-center gap-6">
+            <div class="w-14 h-14 rounded-2xl bg-zinc-900 flex items-center justify-center border border-white/5">
+                <span class="material-symbols-outlined text-zinc-500 text-3xl">restaurant</span>
             </div>
-
-            <div class="glass-panel p-6 rounded-[1.5rem] flex items-center justify-between border border-transparent hover:border-white/5 hover:bg-white/5 transition-all cursor-pointer">
-                <div class="flex items-center gap-6">
-                    <div class="w-14 h-14 rounded-2xl bg-zinc-900 flex items-center justify-center border border-white/5">
-                        <span class="material-symbols-outlined text-zinc-500 text-3xl">coffee</span>
-                    </div>
-                    <div>
-                        <h5 class="text-white font-bold text-lg tracking-tight">#ORD-9120</h5>
-                        <p class="text-[10px] text-zinc-600 font-bold uppercase tracking-widest mt-1">20 Apr 2026 • 09:45 AM</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-16">
-                    <div class="text-right">
-                        <p class="text-xs text-zinc-600 font-bold uppercase mb-1">Total</p>
-                        <p class="text-lg font-headline font-black text-white">Rs. 80.00</p>
-                    </div>
-                    <div class="flex items-center gap-6">
-                        <span class="status-pill completed">Completed</span>
-                        <span class="material-symbols-outlined text-zinc-800 hover:text-primary transition-colors">chevron_right</span>
-                    </div>
-                </div>
+            <div>
+                <h5 class="text-white font-bold text-lg tracking-tight">#ORD-9152</h5>
+                <p class="text-[10px] text-zinc-600 font-bold uppercase tracking-widest mt-1">Yesterday • 01:20 PM</p>
             </div>
         </div>
+        <div class="flex items-center gap-16">
+            <div class="text-right">
+                <p class="text-xs text-zinc-600 font-bold uppercase mb-1">Total</p>
+                <p class="text-lg font-headline font-black text-white">Rs. 240.00</p>
+            </div>
+            <div class="flex items-center gap-6">
+                <span class="status-pill completed">Completed</span>
+                <span class="material-symbols-outlined text-zinc-800 hover:text-primary transition-colors">chevron_right</span>
+            </div> -->
+        <!-- </div>
     </div>
+
+    <div class="glass-panel p-6 rounded-[1.5rem] flex items-center justify-between border border-transparent hover:border-white/5 hover:bg-white/5 transition-all cursor-pointer">
+        <div class="flex items-center gap-6">
+            <div class="w-14 h-14 rounded-2xl bg-zinc-900 flex items-center justify-center border border-white/5">
+                <span class="material-symbols-outlined text-zinc-500 text-3xl">coffee</span>
+            </div>
+            <div>
+                <h5 class="text-white font-bold text-lg tracking-tight">#ORD-9120</h5>
+                <p class="text-[10px] text-zinc-600 font-bold uppercase tracking-widest mt-1">20 Apr 2026 • 09:45 AM</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-16">
+            <div class="text-right">
+                <p class="text-xs text-zinc-600 font-bold uppercase mb-1">Total</p>
+                <p class="text-lg font-headline font-black text-white">Rs. 80.00</p>
+            </div>
+            <div class="flex items-center gap-6">
+                <span class="status-pill completed">Completed</span>
+                <span class="material-symbols-outlined text-zinc-800 hover:text-primary transition-colors">chevron_right</span>
+            </div>
+        </div>
+    </div> -->
+</div>
+</div>
 </main>
+
+<div id="orders-container"></div>
+
+<script>
+    async function loadOrders() {
+
+    const email = localStorage.getItem("email");
+
+    const res = await fetch(
+        `http://127.0.0.1:5000/orders/${email}`
+    );
+
+    const orders = await res.json();
+
+    renderOrders(orders);
+}
+
+    function renderOrders(orders) {
+
+        const container = document.getElementById("orders-container");
+        container.innerHTML = "";
+
+        const grouped = {};
+
+        orders.forEach(order => {
+
+            if (!grouped[order.token]) {
+                grouped[order.token] = {
+                    token: order.token,
+                    status: order.status,
+                    created_at: order.created_at,
+                    items: []
+                };
+            }
+
+            grouped[order.token].items.push(
+                `${order.item} x${order.quantity}`
+            );
+        });
+
+        Object.values(grouped)
+        .sort((a, b) => {
+            // Preparing first
+            if (a.status === "Preparing" && b.status !== "Preparing") return -1;
+            if (a.status !== "Preparing" && b.status === "Preparing") return 1;
+
+            // Then token descending
+            return b.token - a.token;
+        })
+        .forEach(order => {
+
+            container.innerHTML += `
+            <div class="bg-zinc-900 p-5 rounded-xl mb-4">
+                <h3 class="font-bold">Token #${order.token}</h3>
+
+                <div class="mt-2">
+                    ${order.items.map(i => `<p>${i}</p>`).join('')}
+                </div>
+
+                <p class="mt-3 text-yellow-400">
+                    ${order.status}
+                </p>
+            </div>
+            `;
+    });
+}
+
+    loadOrders();
+
+    setInterval(loadOrders, 10000);
+
+
+</script>
 
 </body>
 </html>

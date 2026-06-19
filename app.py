@@ -115,7 +115,7 @@ def verify_payment():
                 token,
                 item['name'],
                 item['qty'],
-                'Pending',
+                'Preparing',
                 phone,
                 email
             )
@@ -176,6 +176,39 @@ def mark_ready():
         "message": "Order marked as Ready"
     })
 
+@app.route('/orders/<email>')
+def get_user_orders(email):
+
+    cur = conn.cursor()
+
+    cur.execute("""
+    SELECT token, item, quantity, status, created_at
+    FROM orders
+    WHERE email = %s
+    ORDER BY
+    CASE
+        WHEN status = 'Preparing' THEN 0
+        ELSE 1
+    END,
+    token DESC,
+    created_at DESC
+""", (email,))
+
+    rows = cur.fetchall()
+
+    orders = []
+
+    for row in rows:
+        orders.append({
+            "token": row[0],
+            "item": row[1],
+            "quantity": row[2],
+            "status": row[3],
+            "created_at": str(row[4])
+        })
+
+    return jsonify(orders)
+
 
 # 🔌 Get Ready Tokens (for hardware)
 @app.route('/ready-tokens', methods=['GET'])
@@ -194,7 +227,7 @@ def ready_tokens():
 def get_orders():
     cur = conn.cursor()
     cur.execute(
-        "SELECT token, item, quantity FROM orders WHERE status='Pending'"
+        "SELECT token, item, quantity FROM orders WHERE status='Preparing'"
     )
     orders = cur.fetchall()
 
