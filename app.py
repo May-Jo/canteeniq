@@ -36,7 +36,7 @@ def get_queue_length():
 @app.route('/menu', methods=['GET'])
 def get_menu():
     cur = conn.cursor()
-    cur.execute("SELECT id, name, price, category FROM menu WHERE available = TRUE;")
+    cur.execute("SELECT id, name, price, category, image_url FROM menu WHERE available = TRUE;")
     items = cur.fetchall()
 
     menu = []
@@ -45,7 +45,8 @@ def get_menu():
             "id": item[0],
             "name": item[1],
             "price": item[2],
-            "cat": item[3]   # IMPORTANT: match frontend (cat)
+            "cat": item[3],
+            "image_url": item[4]
         })
 
     return jsonify(menu)
