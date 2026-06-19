@@ -140,6 +140,23 @@ def mark_ready():
         (token,)
     )
 
+     # Get customer's phone number
+    cur.execute(
+        "SELECT phone FROM orders WHERE token=%s LIMIT 1",
+        (token,)
+    )
+
+    phone = cur.fetchone()[0]
+
+    # Send data to n8n
+    requests.post(
+        "https://canteeniq.app.n8n.cloud/webhook/order-ready",
+        json={
+            "phone": phone,
+            "token": token
+        }
+    )
+
     conn.commit()
 
     try:
