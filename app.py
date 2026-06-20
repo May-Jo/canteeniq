@@ -18,7 +18,7 @@ conn = psycopg2.connect(os.getenv("DATABASE_URL"))
 conn.autocommit = True
 
 
-# 🔢 Generate next token
+# Ã°Å¸â€Â¢ Generate next token
 def get_next_token():
     cur = conn.cursor()
     cur.execute("SELECT MAX(token) FROM orders;")
@@ -26,11 +26,191 @@ def get_next_token():
     return (result + 1) if result else 1
 
 
-# 📊 Get queue length
+# Ã°Å¸â€œÅ  Get queue length
 def get_queue_length():
     cur = conn.cursor()
     cur.execute("SELECT COUNT(*) FROM orders WHERE status='Pending';")
     return cur.fetchone()[0]
+
+def normalize_order_status(status):
+    if not status:
+        return 'Unknown'
+
+    value = str(status).strip()
+    if value.lower() == 'prepaing':
+        return 'Preparing'
+
+    return value
+
+
+def build_staff_dashboard_payload():
+    cur = conn.cursor()
+    cur.execute(
+        """
+        SELECT token, item, quantity, status, phone, email
+        FROM orders
+        ORDER BY token DESC, item ASC
+        """
+    )
+    rows = cur.fetchall()
+
+    grouped = {}
+    active_statuses = {'Pending', 'Preparing'}
+    ready_statuses = {'Ready', 'Completed'}
+
+    for token, item, quantity, status, phone, email in rows:
+        token_key = str(token)
+        normalized_status = normalize_order_status(status)
+
+        if token_key not in grouped:
+            grouped[token_key] = {
+                'token': token,
+                'status': normalized_status,
+                'phone': phone,
+                'email': email,
+                'items': []
+            }
+
+        group = grouped[token_key]
+        group['phone'] = group['phone'] or phone
+        group['email'] = group['email'] or email
+        group['items'].append({
+            'name': item,
+            'qty': quantity
+        })
+
+        if normalized_status in active_statuses:
+            group['status'] = normalized_status
+
+    def sort_key(order):
+        try:
+            return int(order['token'])
+        except (TypeError, ValueError):
+            return 0
+
+    orders = sorted(grouped.values(), key=sort_key, reverse=True)
+    active_orders = [order for order in orders if order['status'] in active_statuses]
+    pending_orders = [order for order in orders if order['status'] == 'Pending']
+    completed_orders = [order for order in orders if order['status'] in ready_statuses]
+    oldest_active = min(active_orders, key=sort_key) if active_orders else None
+
+    if active_orders:
+        alert_title = f"{len(active_orders)} live order{'s' if len(active_orders) != 1 else ''} waiting"
+        alert_subtitle = f"Oldest open token #{oldest_active['token']}"
+        alert_tone = 'warning'
+    else:
+        alert_title = 'Kitchen is caught up'
+        alert_subtitle = 'No active tickets right now'
+        alert_tone = 'calm'
+
+    return {
+        'stats': {
+            'active_orders': len(active_orders),
+            'pending_orders': len(pending_orders),
+            'completed_orders': len(completed_orders),
+            'alert_count': len(active_orders)
+        },
+        'alert': {
+            'title': alert_title,
+            'subtitle': alert_subtitle,
+            'tone': alert_tone
+        },
+        'orders': orders
+    }
+
+def build_user_orders_payload(email=None, phone=None):
+    cur = conn.cursor()
+
+    cur.execute("SELECT name, price FROM menu")
+    menu_prices = {str(name).strip().lower(): float(price or 0) for name, price in cur.fetchall()}
+
+    filters = []
+    params = []
+
+    if email:
+        filters.append("LOWER(COALESCE(email, '')) = %s")
+        params.append(email.strip().lower())
+
+    if phone:
+        filters.append("COALESCE(phone, '') = %s")
+        params.append(phone.strip())
+
+    if filters:
+        query = f"""
+            SELECT token, item, quantity, status, phone, email
+            FROM orders
+            WHERE {' OR '.join(filters)}
+            ORDER BY token DESC, item ASC
+        """
+        cur.execute(query, params)
+        rows = cur.fetchall()
+    else:
+        rows = []
+
+    grouped = {}
+
+    for token, item, quantity, status, row_phone, row_email in rows:
+        token_key = str(token)
+        normalized_status = normalize_order_status(status)
+        price = menu_prices.get(str(item).strip().lower(), 0)
+
+        if token_key not in grouped:
+            grouped[token_key] = {
+                'token': token,
+                'status': normalized_status,
+                'phone': row_phone,
+                'email': row_email,
+                'items': [],
+                'subtotal': 0.0
+            }
+
+        group = grouped[token_key]
+        group['phone'] = group['phone'] or row_phone
+        group['email'] = group['email'] or row_email
+        group['items'].append({
+            'name': item,
+            'qty': quantity,
+            'price': price,
+            'subtotal': price * quantity
+        })
+        group['subtotal'] += price * quantity
+
+        if normalized_status != 'Unknown':
+            group['status'] = normalized_status
+
+    def sort_key(order):
+        try:
+            return int(order['token'])
+        except (TypeError, ValueError):
+            return 0
+
+    orders = sorted(grouped.values(), key=sort_key, reverse=True)
+    live_orders = orders[:2]
+    archive_orders = orders[2:]
+
+    return {
+        'profile': {
+            'email': email,
+            'phone': phone,
+            'display_name': (email.split('@')[0].replace('.', ' ').replace('_', ' ').title() if email else 'Student')
+        },
+        'stats': {
+            'live_count': len(live_orders),
+            'archive_count': len(archive_orders),
+            'total_count': len(orders)
+        },
+        'live_orders': live_orders,
+        'archive_orders': archive_orders,
+        'orders': orders
+    }
+
+
+@app.route('/user-orders', methods=['GET'])
+def user_orders():
+    email = request.args.get('email', '').strip()
+    phone = request.args.get('phone', '').strip()
+    return jsonify(build_user_orders_payload(email=email, phone=phone))
+
 
 # dynamic menu
 @app.route('/menu', methods=['GET'])
@@ -52,7 +232,12 @@ def get_menu():
     return jsonify(menu)
 
 
-# 🟢 Place Order API
+@app.route('/staff-dashboard-data', methods=['GET'])
+def staff_dashboard_data():
+    return jsonify(build_staff_dashboard_payload())
+
+
+# Ã°Å¸Å¸Â¢ Place Order API
 @app.route('/order', methods=['POST'])
 def place_order():
     data = request.json
@@ -162,7 +347,7 @@ def mark_ready():
 
     try:
         requests.get(
-            f"http://192.168.1.20/ready?token={token}",
+            f"http://10.65.48.13/ready?token={token}",
             timeout=3
         )
 
@@ -177,7 +362,7 @@ def mark_ready():
     })
 
 
-# 🔌 Get Ready Tokens (for hardware)
+# Ã°Å¸â€Å’ Get Ready Tokens (for hardware)
 @app.route('/ready-tokens', methods=['GET'])
 def ready_tokens():
     cur = conn.cursor()
@@ -189,7 +374,7 @@ def ready_tokens():
     return jsonify({"tokens": tokens})
 
 
-# 📋 Get Pending Orders (kitchen)
+# Ã°Å¸â€œâ€¹ Get Pending Orders (kitchen)
 @app.route('/orders', methods=['GET'])
 def get_orders():
     cur = conn.cursor()

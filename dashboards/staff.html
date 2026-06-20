@@ -127,31 +127,31 @@
             <div class="staff-card p-6 flex flex-col justify-between">
                 <span class="text-zinc-400 text-xs font-bold uppercase tracking-widest">Active Orders</span>
                 <div class="flex items-baseline justify-between mt-2">
-                    <h3 class="text-4xl font-black">12</h3>
+                    <h3 id="active-orders-count" class="text-4xl font-black">00</h3>
                     <span class="material-symbols-outlined text-primary/40 text-3xl">local_fire_department</span>
                 </div>
             </div>
             <div class="staff-card p-6 flex flex-col justify-between border-primary/20 bg-primary/5">
                 <span class="text-zinc-400 text-xs font-bold uppercase tracking-widest">Pending</span>
                 <div class="flex items-baseline justify-between mt-2">
-                    <h3 class="text-4xl font-black text-secondary">05</h3>
+                    <h3 id="pending-orders-count" class="text-4xl font-black text-secondary">00</h3>
                     <span class="material-symbols-outlined text-secondary/40 text-3xl">schedule</span>
                 </div>
             </div>
             <div class="staff-card p-6 flex flex-col justify-between">
                 <span class="text-zinc-400 text-xs font-bold uppercase tracking-widest">Completed</span>
                 <div class="flex items-baseline justify-between mt-2">
-                    <h3 class="text-4xl font-black text-tertiary">148</h3>
+                    <h3 id="completed-orders-count" class="text-4xl font-black text-tertiary">00</h3>
                     <span class="material-symbols-outlined text-tertiary/40 text-3xl">check_circle</span>
                 </div>
             </div>
-            <div class="staff-card p-6 bg-red-950/20 border-red-500/20 flex flex-col justify-center">
+            <div id="urgent-alert-card" class="staff-card p-6 bg-red-950/20 border-red-500/20 flex flex-col justify-center">
                 <div class="flex items-center gap-2 text-red-500 mb-1">
                     <span class="material-symbols-outlined text-sm">warning</span>
                     <span class="text-[10px] font-black uppercase tracking-widest">Urgent Alerts</span>
                 </div>
-                <h4 class="font-bold text-sm">Chicken Stock Low</h4>
-                <p class="text-[10px] text-zinc-500">Order #882 waiting on refill</p>
+                <h4 id="urgent-alert-title" class="font-bold text-sm">Syncing live queue...</h4>
+                <p id="urgent-alert-subtitle" class="text-[10px] text-zinc-500">Waiting for live data...</p>
             </div>
         </section>
 
@@ -160,80 +160,15 @@
             <div class="flex justify-between items-center mb-8">
                 <h3 class="text-2xl font-extrabold font-headline">Live Order Queue</h3>
                 <div class="flex bg-zinc-900 rounded-xl p-1 text-[10px] font-black uppercase">
-                    <button class="px-4 py-1.5 bg-zinc-800 rounded-lg text-white">ALL</button>
-                    <button class="px-4 py-1.5 text-zinc-500 hover:text-white transition-colors">URGENT</button>
+                    <button type="button" data-filter="all" class="px-4 py-1.5 bg-zinc-800 rounded-lg text-white">ALL</button>
+                    <button type="button" data-filter="urgent" class="px-4 py-1.5 text-zinc-500 hover:text-white transition-colors">URGENT</button>
                 </div>
             </div>
 
-            <div id="orders-container" class="space-y-6">
-                <!-- Order Card: Priority -->
-                <div class="staff-card p-8 flex items-center justify-between border-primary/10">
-                    <div class="flex items-center gap-8">
-                        <div class="w-16 h-16 rounded-2xl bg-zinc-950 border border-primary/20 flex flex-col items-center justify-center">
-                            <span class="text-xl font-black text-primary">12'</span>
-                            <span class="text-[8px] text-zinc-600 uppercase font-black">Elapsed</span>
-                        </div>
-                        <div>
-                            <div class="flex items-center gap-3 mb-1">
-                                <h4 class="text-xl font-black uppercase tracking-tight">#ORD-9042</h4>
-                                <span class="bg-primary/10 text-primary text-[8px] font-black px-2 py-0.5 rounded uppercase tracking-widest border border-primary/20">Priority</span>
-                            </div>
-                            <p class="text-xs text-zinc-500 font-medium mb-3">Customer: James Wilson • Table 12</p>
-                            <div class="space-y-1">
-                                <p class="text-sm font-bold text-zinc-200">2x Classic Wagyu Burger <span class="text-zinc-600 font-normal">(No Pickles)</span></p>
-                                <p class="text-sm font-bold text-zinc-200">1x Truffle Parmesan Fries</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-3">
-                        <button class="amber-gradient text-black font-black px-8 py-3 rounded-xl text-xs hover:scale-105 active:scale-95 transition-all">Mark Preparing</button>
-                        <button class="bg-zinc-800 text-zinc-400 font-bold px-8 py-3 rounded-xl text-xs hover:text-white transition-colors">View Details</button>
-                    </div>
-                </div>
-
-                <!-- Order Card: Regular -->
-                <div class="staff-card p-8 flex items-center justify-between">
-                    <div class="flex items-center gap-8">
-                        <div class="w-16 h-16 rounded-2xl bg-zinc-950 flex flex-col items-center justify-center">
-                            <span class="text-xl font-black text-white">04'</span>
-                            <span class="text-[8px] text-zinc-600 uppercase font-black">Elapsed</span>
-                        </div>
-                        <div>
-                            <div class="flex items-center gap-3 mb-1">
-                                <h4 class="text-xl font-black uppercase tracking-tight">#ORD-9045</h4>
-                                <span class="bg-zinc-800 text-zinc-500 text-[8px] font-black px-2 py-0.5 rounded uppercase tracking-widest">Regular</span>
-                            </div>
-                            <p class="text-xs text-zinc-500 font-medium mb-3">Customer: Sarah Chen • Pickup</p>
-                            <div class="space-y-1">
-                                <p class="text-sm font-bold text-zinc-200">1x Quinoa Buddha Bowl</p>
-                                <p class="text-sm font-bold text-zinc-200">1x Iced Matcha Latte</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-3">
-                        <button class="bg-zinc-800 text-white font-black px-8 py-3 rounded-xl text-xs hover:bg-zinc-700 transition-all">Mark Preparing</button>
-                        <button class="bg-zinc-950 text-zinc-600 font-bold px-8 py-3 rounded-xl text-xs border border-white/5 hover:text-white transition-colors">Print Ticket</button>
-                    </div>
-                </div>
-
-                <!-- Order Card: Ready -->
-                <div class="staff-card p-8 flex items-center justify-between ready-status bg-tertiary/5">
-                    <div class="flex items-center gap-8">
-                        <div class="w-16 h-16 rounded-2xl bg-tertiary/10 border border-tertiary/20 flex items-center justify-center">
-                            <span class="material-symbols-outlined text-tertiary text-2xl">check_circle</span>
-                        </div>
-                        <div>
-                            <div class="flex items-center gap-3 mb-1">
-                                <h4 class="text-xl font-black uppercase tracking-tight text-white">#ORD-9040</h4>
-                                <span class="text-tertiary text-[10px] font-black uppercase tracking-widest">Ready</span>
-                            </div>
-                            <p class="text-xs text-zinc-500 font-medium mb-1">Customer: Mike Ross • Table 04</p>
-                            <p class="text-[10px] text-tertiary font-bold animate-pulse">Waiting for pickup for 03:12</p>
-                        </div>
-                    </div>
-                    <button class="bg-tertiary text-black font-black px-8 py-4 rounded-xl text-sm shadow-xl shadow-tertiary/10">Mark Completed</button>
-                </div>
+            <div id="orders-empty" class="hidden staff-card p-8 text-sm text-zinc-400">
+                No live orders right now.
             </div>
+            <div id="orders-container" class="space-y-6"></div>
         </section>
     </div>
 
@@ -330,155 +265,319 @@
 </main>
 
 <script>
+const API_BASE_CANDIDATES = (() => {
+    const candidates = [];
+    const configuredBase = (window.CANTEENIQ_API_BASE || localStorage.getItem('canteeniqApiBase') || '').trim();
 
-let lastData = [];
+    if (configuredBase) {
+        candidates.push(configuredBase.replace(/\/+$/, ''));
+    }
+
+    if (window.location.protocol !== 'file:') {
+        candidates.push(window.location.origin);
+    }
+
+    candidates.push('http://127.0.0.1:5000');
+    candidates.push('http://localhost:5000');
+
+    return [...new Set(candidates)];
+})();
+
+const ACTIVE_STATUSES = new Set(['Pending', 'Preparing']);
+const READY_STATUSES = new Set(['Ready', 'Completed']);
+
+let dashboardState = {
+    stats: {
+        active_orders: 0,
+        pending_orders: 0,
+        completed_orders: 0,
+        alert_count: 0
+    },
+    alert: {
+        title: 'Syncing live queue...',
+        subtitle: 'Waiting for live data...',
+        tone: 'calm'
+    },
+    orders: []
+};
+let currentFilter = 'all';
 let openToken = null;
+let lastSignature = '';
 
-async function loadOrders() {
-    const res = await fetch('http://127.0.0.1:5000/orders', {
-        cache: "no-store"
+async function apiFetchJson(path, options = {}, timeoutMs = 4000) {
+    let lastError = null;
+
+    for (const base of API_BASE_CANDIDATES) {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+        try {
+            const url = new URL(path, base.endsWith('/') ? base : `${base}/`).toString();
+            const res = await fetch(url, { ...options, signal: controller.signal });
+
+            if (!res.ok) {
+                throw new Error(`HTTP ${res.status} from ${url}`);
+            }
+
+            return await res.json();
+        } catch (error) {
+            lastError = error;
+        } finally {
+            clearTimeout(timeoutId);
+        }
+    }
+
+    throw lastError || new Error(`Unable to reach API for ${path}`);
+}
+
+function normalizeStatus(status) {
+    if (!status) return 'Unknown';
+    const value = String(status).trim();
+    return value.toLowerCase() === 'prepaing' ? 'Preparing' : value;
+}
+
+function isActiveOrder(order) {
+    return ACTIVE_STATUSES.has(normalizeStatus(order.status));
+}
+
+function isReadyOrder(order) {
+    return READY_STATUSES.has(normalizeStatus(order.status));
+}
+
+function formatToken(token) {
+    return `#ORD-${String(token).padStart(4, '0')}`;
+}
+
+function formatCustomer(order) {
+    return order.email || order.phone || 'Guest';
+}
+
+function escapeHtml(value) {
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function signatureFor(state) {
+    return JSON.stringify({
+        stats: state.stats,
+        alert: state.alert,
+        orders: state.orders.map(order => ({
+            token: order.token,
+            status: order.status,
+            itemCount: order.items.length
+        }))
     });
+}
 
-    const data = await res.json();
+function setFilter(filter) {
+    currentFilter = filter;
+    document.querySelectorAll('[data-filter]').forEach(button => {
+        const active = button.dataset.filter === filter;
+        button.className = active
+            ? 'px-4 py-1.5 bg-zinc-800 rounded-lg text-white'
+            : 'px-4 py-1.5 text-zinc-500 hover:text-white transition-colors';
+    });
+    renderOrders();
+}
 
-    if (JSON.stringify(data) === JSON.stringify(lastData)) {
+function updateStats() {
+    document.getElementById('active-orders-count').textContent = String(dashboardState.stats.active_orders || 0).padStart(2, '0');
+    document.getElementById('pending-orders-count').textContent = String(dashboardState.stats.pending_orders || 0).padStart(2, '0');
+    document.getElementById('completed-orders-count').textContent = String(dashboardState.stats.completed_orders || 0).padStart(2, '0');
+
+    const alertCard = document.getElementById('urgent-alert-card');
+    const tone = dashboardState.alert.tone === 'warning' ? 'warning' : 'calm';
+
+    if (tone === 'warning') {
+        alertCard.className = 'staff-card p-6 bg-red-950/20 border-red-500/20 flex flex-col justify-center';
+    } else {
+        alertCard.className = 'staff-card p-6 bg-emerald-950/20 border-emerald-500/20 flex flex-col justify-center';
+    }
+
+    document.getElementById('urgent-alert-title').textContent = dashboardState.alert.title || 'Kitchen is caught up';
+    document.getElementById('urgent-alert-subtitle').textContent = dashboardState.alert.subtitle || 'No active tickets right now';
+}
+
+function getVisibleOrders() {
+    const orders = dashboardState.orders || [];
+
+    if (currentFilter === 'urgent') {
+        return orders.filter(isActiveOrder);
+    }
+
+    return orders;
+}
+
+function renderDetails(order) {
+    const items = order.items || [];
+    const rows = items.map(item => `
+        <tr class="border-t border-zinc-700/70">
+            <td class="p-2">${escapeHtml(item.name)}</td>
+            <td class="p-2 text-right">${escapeHtml(item.qty)}</td>
+        </tr>
+    `).join('');
+
+    return `
+        <div class="mt-4 rounded-2xl border border-white/5 bg-zinc-950/80 overflow-hidden">
+            <div class="grid grid-cols-3 gap-4 p-4 text-xs text-zinc-400 border-b border-white/5">
+                <div><span class="text-zinc-600 uppercase font-bold block mb-1">Token</span>${formatToken(order.token)}</div>
+                <div><span class="text-zinc-600 uppercase font-bold block mb-1">Customer</span>${escapeHtml(formatCustomer(order))}</div>
+                <div><span class="text-zinc-600 uppercase font-bold block mb-1">Status</span>${escapeHtml(normalizeStatus(order.status))}</div>
+            </div>
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="bg-zinc-900 text-zinc-400 uppercase text-[10px] tracking-widest">
+                        <th class="p-2 text-left">Item</th>
+                        <th class="p-2 text-right">Qty</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${rows}
+                </tbody>
+            </table>
+        </div>
+    `;
+}
+
+function renderOrderCard(order) {
+    const status = normalizeStatus(order.status);
+    const active = isActiveOrder(order);
+    const ready = isReadyOrder(order);
+    const statusPillClass = ready
+        ? 'bg-tertiary/10 text-tertiary border border-tertiary/20'
+        : 'bg-primary/10 text-primary border border-primary/20';
+    const statusLabel = ready ? 'Ready' : status;
+    const buttonLabel = active ? 'Mark Ready' : (ready ? 'Ready' : status);
+    const buttonClass = active
+        ? 'amber-gradient text-black font-black px-8 py-3 rounded-xl text-xs hover:scale-105 active:scale-95 transition-all'
+        : 'bg-zinc-800 text-zinc-500 font-black px-8 py-3 rounded-xl text-xs cursor-not-allowed';
+    const buttonAttrs = active ? `onclick="markReady(${order.token})"` : 'disabled';
+    const items = (order.items || []).slice(0, 3);
+    const itemHtml = items.map(item => `
+        <p class="text-sm font-bold text-zinc-200">${escapeHtml(item.qty)}x ${escapeHtml(item.name)}</p>
+    `).join('');
+    const extraCount = (order.items || []).length - items.length;
+
+    return `
+        <div class="staff-card p-8 flex items-center justify-between ${ready ? 'ready-status bg-tertiary/5' : 'border-primary/10'}">
+            <div class="flex items-center gap-8">
+                <div class="w-16 h-16 rounded-2xl ${ready ? 'bg-tertiary/10 border border-tertiary/20' : 'bg-zinc-950 border border-primary/20'} flex flex-col items-center justify-center">
+                    <span class="text-sm font-black ${ready ? 'text-tertiary' : 'text-primary'}">${String(order.token).slice(-3)}</span>
+                    <span class="text-[8px] text-zinc-600 uppercase font-black">Live</span>
+                </div>
+                <div>
+                    <div class="flex items-center gap-3 mb-1">
+                        <h4 class="text-xl font-black uppercase tracking-tight">${formatToken(order.token)}</h4>
+                        <span class="${statusPillClass} text-[8px] font-black px-2 py-0.5 rounded uppercase tracking-widest">${escapeHtml(statusLabel)}</span>
+                    </div>
+                    <p class="text-xs text-zinc-500 font-medium mb-3">Customer: ${escapeHtml(formatCustomer(order))}</p>
+                    <div class="space-y-1">
+                        ${itemHtml}
+                        ${extraCount > 0 ? `<p class="text-[10px] text-zinc-500 font-bold uppercase">+${extraCount} more item${extraCount > 1 ? 's' : ''}</p>` : ''}
+                    </div>
+                    <div id="details-${order.token}" class="hidden mt-4"></div>
+                </div>
+            </div>
+            <div class="flex flex-col gap-3">
+                <button ${buttonAttrs} class="${buttonClass}">${buttonLabel}</button>
+                <button onclick="toggleDetails(${order.token})" class="bg-zinc-800 text-zinc-400 font-bold px-8 py-3 rounded-xl text-xs hover:text-white transition-colors">View Details</button>
+            </div>
+        </div>
+    `;
+}
+
+function renderOrders() {
+    const container = document.getElementById('orders-container');
+    const empty = document.getElementById('orders-empty');
+    const visibleOrders = getVisibleOrders().slice(0, 8);
+
+    if (visibleOrders.length === 0) {
+        container.innerHTML = '';
+        empty.classList.remove('hidden');
         return;
     }
 
-    lastData = data;
+    empty.classList.add('hidden');
+    container.innerHTML = visibleOrders.map(renderOrderCard).join('');
 
-    const container = document.getElementById('orders-container');
-    container.innerHTML = '';
-
-    const grouped = {};
-
-    data.forEach(([token, item, qty]) => {
-        if (!grouped[token]) grouped[token] = [];
-        grouped[token].push({ item, qty });
-    });
-
-    for (const token of Object.keys(grouped)) {
-        const items = grouped[token];
-
-        const itemsHTML = items.map(i =>
-            `<p>${i.item} (${i.qty})</p>`
-        ).join('');
-
-        const div = document.createElement('div');
-        div.className = "bg-zinc-900 p-4 rounded-xl";
-
-        div.innerHTML = `
-
-            <div class="flex justify-between items-center w-full">
-
-                <div>
-                    <h4 class="font-bold">Token #${token}</h4>
-                    
-                    <div id="details-${token}" class="hidden mt-2 text-sm text-zinc-300"></div>
-                </div>    
-                
-                <div class="flex flex-col gap-2 w-32">
-                    <button onclick="toggleDetails(${token})"
-                        class="bg-zinc-800 text-white px-4 py-2 rounded text-sm w-full">
-                        View Details
-                    </button>
-
-                    <button onclick="markReady(${token})"
-                        class="bg-orange-500 text-black px-4 py-2 rounded text-sm w-full">
-                        Mark Ready
-                    </button>
-                </div>
-            </div>
-
-        `;
-
-        container.appendChild(div);
-
-        const detailsDiv = document.getElementById(`details-${token}`);
-
-        if (String(token) === String(openToken)) {
-            if (detailsDiv.innerHTML === "") {
-                await viewDetails(token);
-            }
-        detailsDiv.classList.remove("hidden");
-        } else {
-            detailsDiv.classList.add("hidden");
+    if (openToken !== null) {
+        const details = document.getElementById(`details-${openToken}`);
+        const order = dashboardState.orders.find(item => String(item.token) === String(openToken));
+        if (details && order) {
+            details.innerHTML = renderDetails(order);
+            details.classList.remove('hidden');
         }
-
     }
 }
 
-// run it
-loadOrders();
-setInterval(loadOrders, 3000);
+async function loadDashboard() {
+    try {
+        const data = await apiFetchJson('/staff-dashboard-data');
+        const nextState = {
+            stats: data.stats || dashboardState.stats,
+            alert: data.alert || dashboardState.alert,
+            orders: Array.isArray(data.orders) ? data.orders : []
+        };
+
+        const nextSignature = signatureFor(nextState);
+        dashboardState = nextState;
+
+        if (nextSignature !== lastSignature) {
+            lastSignature = nextSignature;
+            updateStats();
+            renderOrders();
+        }
+    } catch (error) {
+        dashboardState = {
+            stats: { active_orders: 0, pending_orders: 0, completed_orders: 0, alert_count: 0 },
+            alert: { title: 'Dashboard offline', subtitle: 'Could not reach the live order feed', tone: 'calm' },
+            orders: []
+        };
+        updateStats();
+        renderOrders();
+        console.warn('Failed to load staff dashboard:', error);
+    }
+}
 
 async function markReady(token) {
-    await fetch('http://127.0.0.1:5000/mark-ready', {
+    await apiFetchJson('/mark-ready', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token })
     });
 
-    loadOrders(); // refresh UI
-}
-
-async function viewDetails(token) {
-    const res = await fetch('http://127.0.0.1:5000/orders', {
-        cache: "no-store"
-    });
-
-    const orders = await res.json();
-    console.log("Orders:", orders); 
-
-    // filter orders for this token
-    const filtered = orders.filter(o => String(o[0]) === String(token));
-
-    let html = `
-        <table class="w-full text-sm border border-zinc-700">
-            <thead>
-                <tr class="bg-zinc-800">
-                    <th class="p-2">Item</th>
-                    <th class="p-2">Qty</th>
-                </tr>
-            </thead>
-            <tbody>
-    `;
-
-    filtered.forEach(o => {
-        html += `
-            <tr class="border-t border-zinc-700">
-                <td class="p-2">${o[1]}</td>
-                <td class="p-2">${o[2]}</td>
-            </tr>
-        `;
-    });
-
-    html += `</tbody></table>`;
-
-    console.log("Looking for:", `details-${String(token)}`);
-    const div = document.getElementById(`details-${String(token)}`);
-    console.log("DIV:", div);
-    div.innerHTML = html;
-
+    openToken = null;
+    await loadDashboard();
 }
 
 async function toggleDetails(token) {
-    const div = document.getElementById(`details-${token}`);
+    const details = document.getElementById(`details-${token}`);
+    const order = dashboardState.orders.find(item => String(item.token) === String(token));
 
-    if (openToken === token) {
+    if (!details || !order) return;
+
+    if (openToken === token && !details.classList.contains('hidden')) {
         openToken = null;
-        div.classList.add("hidden");
+        details.classList.add('hidden');
         return;
     }
 
     openToken = token;
-
-    // 🔥 load data when opening
-    await viewDetails(token);
-
-    div.classList.remove("hidden");
+    details.innerHTML = renderDetails(order);
+    details.classList.remove('hidden');
 }
 
+document.querySelectorAll('[data-filter]').forEach(button => {
+    button.addEventListener('click', () => setFilter(button.dataset.filter));
+});
+
+setFilter('all');
+loadDashboard();
+setInterval(loadDashboard, 4000);
 </script>
 
 </body>
